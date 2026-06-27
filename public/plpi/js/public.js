@@ -30,13 +30,18 @@ document.addEventListener('DOMContentLoaded', function () {
     const progressBar = document.getElementById('readingProgressBar');
 
     if (progressBar) {
-        window.addEventListener('scroll', function () {
+        const updateReadingProgress = function () {
             const scrollTop = window.scrollY;
             const docHeight = document.documentElement.scrollHeight - window.innerHeight;
             const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
 
             progressBar.style.width = progress + '%';
-        });
+        };
+
+        updateReadingProgress();
+
+        window.addEventListener('scroll', updateReadingProgress);
+        window.addEventListener('resize', updateReadingProgress);
     }
 
     const copyButton = document.querySelector('.copy-link-btn');
