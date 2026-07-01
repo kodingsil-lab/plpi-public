@@ -16,6 +16,7 @@ DB_USER="${DB_USER:-loaunisa_plpiuser}"
 DB_PASS="${PLPI_DB_PASS:-}"
 DB_PORT="${DB_PORT:-3306}"
 ENCRYPTION_KEY="${ENCRYPTION_KEY:-hex2bin:9b7d0c3f2a1e4d5c6b7f8091a2b3c4d59e8f7a6b5c4d3e2f1a0b9c8d7e6f5a4}"
+COMPOSER_BIN="${COMPOSER_BIN:-}"
 
 ACTION="${1:-install}"
 
@@ -57,6 +58,7 @@ backup_webroot_once() {
 checkout_code() {
     if [ -d "$APP_DIR/.git" ]; then
         log "Update repo di $APP_DIR"
+        git -C "$APP_DIR" remote set-url origin "$REPO_URL"
         git -C "$APP_DIR" fetch origin "$BRANCH"
         git -C "$APP_DIR" reset --hard "origin/$BRANCH"
     else
@@ -71,13 +73,38 @@ checkout_code() {
 
 install_dependencies() {
     log "Install composer dependencies"
-    if command -v composer >/dev/null 2>&1; then
-        composer install --working-dir="$APP_DIR" --no-dev --optimize-autoloader
-    elif [ -f "$APP_DIR/composer.phar" ]; then
-        php "$APP_DIR/composer.phar" install --working-dir="$APP_DIR" --no-dev --optimize-autoloader
+    local composer_cmd=""
+
+    if [ -n "$COMPOSER_BIN" ] && [ -x "$COMPOSER_BIN" ]; then
+        composer_cmd="$COMPOSER_BIN"
+    elif command -v composer >/dev/null 2>&1; then
+        composer_cmd="$(command -v composer)"
     else
-        fail "Composer tidak ditemukan. Install Composer di cPanel atau upload composer.phar."
+        for candidate in \
+            "$HOME/bin/composer" \
+            "$HOME/.local/bin/composer" \
+            "/opt/cpanel/composer/bin/composer" \
+            "/usr/local/bin/composer" \
+            "/usr/bin/composer"
+        do
+            if [ -x "$candidate" ]; then
+                composer_cmd="$candidate"
+                break
+            fi
+        done
     fi
+
+    if [ -n "$composer_cmd" ]; then
+        "$composer_cmd" install --working-dir="$APP_DIR" --no-dev --optimize-autoloader
+        return
+    fi
+
+    if [ -f "$APP_DIR/composer.phar" ]; then
+        php "$APP_DIR/composer.phar" install --working-dir="$APP_DIR" --no-dev --optimize-autoloader
+        return
+    fi
+
+    fail "Composer tidak ditemukan. Coba jalankan dengan COMPOSER_BIN=/path/to/composer atau install Composer di cPanel."
 }
 
 write_env() {
