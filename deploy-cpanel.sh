@@ -104,7 +104,17 @@ install_dependencies() {
         return
     fi
 
-    fail "Composer tidak ditemukan. Coba jalankan dengan COMPOSER_BIN=/path/to/composer atau install Composer di cPanel."
+    log "Composer tidak ditemukan, download composer.phar lokal"
+    if command -v curl >/dev/null 2>&1; then
+        curl -fsSL https://getcomposer.org/composer-stable.phar -o "$APP_DIR/composer.phar"
+    elif command -v wget >/dev/null 2>&1; then
+        wget -q https://getcomposer.org/composer-stable.phar -O "$APP_DIR/composer.phar"
+    else
+        php -r "copy('https://getcomposer.org/composer-stable.phar', '$APP_DIR/composer.phar');"
+    fi
+
+    [ -f "$APP_DIR/composer.phar" ] || fail "Gagal download composer.phar. Upload composer.phar ke $APP_DIR atau set COMPOSER_BIN=/path/to/composer."
+    php "$APP_DIR/composer.phar" install --working-dir="$APP_DIR" --no-dev --optimize-autoloader
 }
 
 write_env() {
