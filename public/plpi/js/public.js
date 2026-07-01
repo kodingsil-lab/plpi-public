@@ -155,6 +155,22 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    const passwordToggle = document.querySelector('[data-password-toggle]');
+
+    if (passwordToggle) {
+        passwordToggle.addEventListener('click', function () {
+            const passwordInput = document.getElementById('password');
+
+            if (!passwordInput) {
+                return;
+            }
+
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+            passwordToggle.setAttribute('aria-label', isPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi');
+        });
+    }
+
     const countElements = document.querySelectorAll('.count-up');
 
     if (countElements.length > 0) {

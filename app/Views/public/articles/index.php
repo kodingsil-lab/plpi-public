@@ -14,12 +14,12 @@ $articleItems = array_slice($articles, 1);
             <nav class="breadcrumb">
                 <a href="<?= site_url('/') ?>">Beranda</a>
                 <span>/</span>
-                <strong>Artikel Ilmiah</strong>
+                <strong>Artikel Edukatif</strong>
             </nav>
 
             <span class="eyebrow">Literasi Publikasi Ilmiah</span>
 
-            <h1>Artikel Ilmiah</h1>
+            <h1>Artikel Edukatif</h1>
 
             <p>
                 Kumpulan artikel edukatif tentang penulisan artikel ilmiah, struktur naskah,

@@ -15,7 +15,7 @@ $whatsappText = rawurlencode($shareTitle . "\n" . $shareUrl);
         <nav class="breadcrumb">
             <a href="<?= site_url('/') ?>">Beranda</a>
             <span>/</span>
-            <a href="<?= site_url('artikel') ?>">Artikel Ilmiah</a>
+            <a href="<?= site_url('artikel') ?>">Artikel Edukatif</a>
             <span>/</span>
             <strong><?= esc($article['category']) ?></strong>
         </nav>
@@ -79,13 +79,17 @@ $whatsappText = rawurlencode($shareTitle . "\n" . $shareUrl);
             </div>
 
             <div class="article-prose">
-                <?php foreach ($article['content'] as $index => $paragraph): ?>
-                    <?php if ($index === 0): ?>
-                        <p class="dropcap"><?= esc($paragraph) ?></p>
-                    <?php else: ?>
-                        <p><?= esc($paragraph) ?></p>
-                    <?php endif; ?>
-                <?php endforeach; ?>
+                <?php if (! empty($article['content_html'])): ?>
+                    <?= $article['content_html'] ?>
+                <?php else: ?>
+                    <?php foreach ($article['content'] as $index => $paragraph): ?>
+                        <?php if ($index === 0): ?>
+                            <p class="dropcap"><?= esc($paragraph) ?></p>
+                        <?php else: ?>
+                            <p><?= esc($paragraph) ?></p>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                <?php endif; ?>
 
                 <blockquote id="penutup">
                     Artikel ilmiah yang baik tidak hanya benar secara struktur, tetapi juga jelas, etis, mudah dipahami, dan relevan dengan pembaca sasaran.

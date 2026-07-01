@@ -1,9 +1,20 @@
+<?php
+helper('app_settings');
+$appSettings = plpi_app_settings();
+$assetVersion = rawurlencode((string) ($appSettings['updated_at'] ?? time()));
+$publicLogoPath = (string) ($appSettings['public_logo_path'] ?? $appSettings['header_logo_path'] ?? '');
+$publicLogoUrl = $publicLogoPath !== '' ? plpi_asset_url($publicLogoPath) . '?v=' . $assetVersion : '';
+?>
 <footer class="site-footer">
     <div class="container footer-main">
         <div class="footer-about">
             <a href="<?= site_url('/') ?>" class="footer-brand">
                 <span class="brand-mark">
-                    <span>PL</span>
+                    <?php if ($publicLogoUrl !== ''): ?>
+                        <img src="<?= esc($publicLogoUrl, 'attr') ?>" alt="Logo PLPI">
+                    <?php else: ?>
+                        <span>PL</span>
+                    <?php endif; ?>
                 </span>
 
                 <span class="footer-brand-text">
@@ -20,7 +31,7 @@
             <div class="footer-badges">
                 <span>LoA</span>
                 <span>Jurnal</span>
-                <span>Artikel Ilmiah</span>
+                <span>Artikel Edukatif</span>
             </div>
         </div>
 
@@ -33,7 +44,7 @@
         </div>
 
         <div class="footer-column">
-            <h4>Artikel Ilmiah</h4>
+            <h4>Artikel Edukatif</h4>
             <a href="<?= site_url('artikel/cara-menulis-artikel-ilmiah-yang-baik') ?>">Cara Menulis Artikel Ilmiah</a>
             <a href="<?= site_url('artikel/memahami-struktur-imrad-dalam-artikel-ilmiah') ?>">Struktur IMRAD</a>
             <a href="<?= site_url('artikel/tips-memilih-jurnal-yang-tepat') ?>">Tips Memilih Jurnal</a>

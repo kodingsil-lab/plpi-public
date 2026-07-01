@@ -7,17 +7,17 @@
         <div class="home-hero-content">
             <span class="eyebrow">Pusat Layanan Publikasi Ilmiah</span>
 
-            <h1>Ajukan, pantau, dan verifikasi LoA publikasi secara lebih mudah.</h1>
+            <h1>Pusat Layanan Pendukung Publikasi Ilmiah</h1>
 
             <p>
-                PLPI membantu penulis dan pengelola jurnal dalam proses pengajuan Letter of Acceptance,
-                verifikasi dokumen, serta akses informasi jurnal dan literasi publikasi ilmiah.
+                PLPI merupakan portal informasi terintegrasi untuk membantu para penulis dalam proses 
+                pengajuan Letter of Acceptance jurnal, pemantauan dokumen, serta akses informasi jurnal dan literasi publikasi ilmiah.
             </p>
 
             <div class="home-hero-actions">
                 <a href="<?= site_url('ajukan-loa') ?>" class="btn-primary">Ajukan LoA</a>
                 <a href="<?= site_url('verifikasi-loa') ?>" class="btn-secondary">Verifikasi LoA</a>
-                <a href="<?= site_url('artikel') ?>" class="btn-link">Baca Artikel Ilmiah</a>
+                <a href="<?= site_url('artikel') ?>" class="btn-link">Baca Artikel Edukatif</a>
             </div>
 
             <div class="home-trust-row">
@@ -33,40 +33,12 @@
         </div>
 
         <div class="home-hero-visual">
-            <div class="visual-card visual-card-main">
-                <div class="visual-card-header">
-                    <span>Dokumen LoA</span>
-                    <strong>Disetujui</strong>
-                </div>
+            <img
+                src="<?= base_url('plpi/images/hero1.png') ?>"
+                alt="Ilustrasi layanan publikasi ilmiah PLPI"
+                class="home-hero-image"
+            >
 
-                <div class="visual-doc">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span class="short"></span>
-                </div>
-
-                <div class="visual-signature">
-                    <div></div>
-                    <span>PLPI-00064</span>
-                </div>
-            </div>
-
-            <div class="visual-floating-card card-top">
-                <span>📄</span>
-                <div>
-                    <strong>52</strong>
-                    <small>Permohonan</small>
-                </div>
-            </div>
-
-            <div class="visual-floating-card card-bottom">
-                <span>✅</span>
-                <div>
-                    <strong>48</strong>
-                    <small>LoA Terbit</small>
-                </div>
-            </div>
         </div>
     </div>
 </section>
@@ -104,11 +76,11 @@
 <section class="section">
     <div class="container">
         <div class="section-heading center">
-            <span>Layanan Utama</span>
-            <h2>Satu pintu untuk kebutuhan publikasi ilmiah</h2>
+            <span>PORTAL LAYANAN PUBLIKASI</span>
+            <h2>Ajukan, Verifikasi, dan Telusuri Informasi Jurnal dalam Satu Sistem</h2>
             <p>
-                Layanan dirancang agar proses administrasi publikasi menjadi lebih ringkas,
-                terdokumentasi, dan mudah diverifikasi.
+                Portal ini dirancang untuk membantu penulis mengurus permohonan LoA, memverifikasi keaslian dokumen LoA,
+                memperoleh informasi jurnal,serta mengakses artikel-artikel edukatif seputar publikasi ilmiah.
             </p>
         </div>
 
@@ -117,24 +89,32 @@
                 <div class="home-service-icon">📄</div>
                 <span>01</span>
                 <h3>Pengajuan LoA</h3>
-                <p>Penulis dapat mengajukan permohonan LoA dengan data naskah, jurnal, dan identitas penulis secara terstruktur.</p>
-                <a href="<?= site_url('ajukan-loa') ?>">Mulai Pengajuan</a>
+                <p>Ajukan permohonan Letter of Acceptance berdasarkan data artikel, identitas penulis, dan jurnal tujuan secara terstruktur.</p>
+                <a href="<?= site_url('ajukan-loa') ?>">Ajukan LoA</a>
             </div>
 
             <div class="home-service-card featured">
                 <div class="home-service-icon">🔍</div>
                 <span>02</span>
                 <h3>Verifikasi LoA</h3>
-                <p>Pengguna dapat mengecek keaslian dan status LoA berdasarkan kode unik yang diterbitkan oleh sistem.</p>
-                <a href="<?= site_url('verifikasi-loa') ?>">Verifikasi Sekarang</a>
+                <p>Periksa keaslian dan status LoA menggunakan nomor dokumen yang diterbitkan oleh sistem.</p>
+                <a href="<?= site_url('verifikasi-loa') ?>">Verifikasi LoA</a>
             </div>
 
             <div class="home-service-card">
                 <div class="home-service-icon">📚</div>
                 <span>03</span>
                 <h3>Informasi Jurnal</h3>
-                <p>Profil jurnal ditampilkan agar penulis dapat melihat identitas, kategori, dan tautan jurnal yang tersedia.</p>
-                <a href="#profil-jurnal">Lihat Jurnal</a>
+                <p>Temukan profil jurnal, fokus dan ruang lingkup, jadwal terbit, serta tautan OJS resmi yang tersedia.</p>
+                <a href="#profil-jurnal">Lihat Informasi Jurnal</a>
+            </div>
+
+            <div class="home-service-card">
+                <div class="home-service-icon">&#128240;</div>
+                <span>04</span>
+                <h3>Artikel Edukatif</h3>
+                <p>Akses artikel edukatif seputar publikasi ilmiah, pengelolaan naskah, jurnal, dan literasi akademik.</p>
+                <a href="<?= site_url('artikel') ?>">Baca Artikel Edukatif</a>
             </div>
         </div>
     </div>
@@ -145,7 +125,7 @@
         <div class="section-heading center">
             <span>Alur Layanan</span>
             <h2>Proses pengajuan dibuat sederhana</h2>
-            <p>Pengguna mengikuti empat tahapan utama sampai LoA dapat diterbitkan dan diverifikasi.</p>
+            <p>Pengguna mengikuti empat tahapan utama sampai LoA dapat diterbitkan oleh admin.</p>
         </div>
 
         <div class="process-grid">
@@ -169,8 +149,8 @@
 
             <div class="process-item">
                 <div>4</div>
-                <h3>Verifikasi Publik</h3>
-                <p>LoA dapat diverifikasi melalui halaman public.</p>
+                <h3>Arsip Data</h3>
+                <p>Data permohonan dan LoA terbit tersimpan di dashboard admin.</p>
             </div>
         </div>
     </div>
@@ -185,7 +165,7 @@
                 <p>Daftar terbaru pengajuan LoA yang masuk ke sistem.</p>
             </div>
 
-            <a href="<?= site_url('verifikasi-loa') ?>" class="btn-secondary">Cek LoA</a>
+            <a href="<?= site_url('ajukan-loa') ?>" class="btn-secondary">Ajukan LoA</a>
         </div>
 
         <div class="request-list">
@@ -217,7 +197,7 @@
         <div class="section-between">
             <div class="section-heading">
                 <span>Literasi Publikasi</span>
-                <h2>Artikel Ilmiah</h2>
+                <h2>Artikel Edukatif</h2>
                 <p>
                     Artikel edukatif untuk membantu penulis memahami penulisan,
                     struktur naskah, etika publikasi, dan proses submit jurnal.
@@ -284,15 +264,24 @@
             <?php foreach ($journals as $index => $journal): ?>
                 <div class="home-journal-card">
                     <div class="journal-cover-new">
-                        <span>Jurnal</span>
-                        <strong><?= strtoupper(substr($journal['name'], 0, 1)) ?></strong>
+                        <?php if (! empty($journal['logo_url'])): ?>
+                            <img src="<?= esc((string) $journal['logo_url'], 'attr') ?>" alt="Logo <?= esc($journal['name']) ?>" loading="lazy">
+                        <?php else: ?>
+                            <span>Jurnal</span>
+                            <strong><?= strtoupper(substr($journal['name'], 0, 1)) ?></strong>
+                        <?php endif; ?>
                     </div>
 
                     <div class="journal-info-new">
                         <small><?= esc($journal['category']) ?></small>
                         <h3><?= esc($journal['name']) ?></h3>
                         <p><?= esc($journal['issn']) ?></p>
-                        <a href="<?= esc($journal['url']) ?>">Lihat Jurnal</a>
+                        <div class="journal-action-row">
+                            <a href="<?= esc($journal['url']) ?>">Lihat Jurnal</a>
+                            <?php if (! empty($journal['recruitment_url']) && $journal['recruitment_url'] !== '#'): ?>
+                                <a href="<?= esc($journal['recruitment_url']) ?>">Daftar Editor/Reviewer</a>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
             <?php endforeach; ?>
