@@ -59,6 +59,12 @@ Vagrantfile
 
 /writable/uploads/*
 !/writable/uploads/index.html
+!/writable/uploads/journals/
+!/writable/uploads/journals/**
+!/writable/uploads/loa/
+!/writable/uploads/loa/**
+!/writable/uploads/publishers/
+!/writable/uploads/publishers/**
 
 /writable/debugbar/*
 !/writable/debugbar/index.html
