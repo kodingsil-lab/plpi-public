@@ -2,7 +2,7 @@
 set -euo pipefail
 
 APP_NAME="plpi"
-REPO_URL="git@github.com:kodingsil-lab/plpi-public.git"
+REPO_URL="${REPO_URL:-https://github.com/kodingsil-lab/plpi-public.git}"
 BRANCH="main"
 
 APP_DIR="${APP_DIR:-$HOME/plpi-app}"
