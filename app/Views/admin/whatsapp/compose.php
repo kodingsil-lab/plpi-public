@@ -99,27 +99,6 @@ foreach (($templates ?? []) as $template) {
     </form>
 </section>
 
-<?php if (! empty($recentMessages)): ?>
-<section class="admin-panel mt-panel">
-    <div class="admin-table compact-history">
-        <div class="table-row table-head">
-            <span>Penerima</span>
-            <span>Nomor</span>
-            <span>Waktu</span>
-            <span>Aksi</span>
-        </div>
-        <?php foreach ($recentMessages as $message): ?>
-            <div class="table-row">
-                <span><?= esc((string) ($message['recipient_name'] ?? '-')) ?></span>
-                <span><?= esc((string) ($message['phone_number'] ?? '-')) ?></span>
-                <span><?= esc((string) ($message['created_at'] ?? '-')) ?></span>
-                <span><a class="admin-btn secondary" href="<?= esc((string) ($message['wa_url'] ?? '#'), 'attr') ?>" target="_blank" rel="noopener noreferrer">Buka</a></span>
-            </div>
-        <?php endforeach; ?>
-    </div>
-</section>
-<?php endif; ?>
-
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const templates = <?= json_encode($templatePayload, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) ?>;
