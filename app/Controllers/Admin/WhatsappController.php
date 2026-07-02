@@ -20,7 +20,6 @@ class WhatsappController extends BaseController
         }
 
         $templates = [];
-        $recentMessages = [];
         $journals = [];
         $databaseError = null;
 
@@ -30,9 +29,6 @@ class WhatsappController extends BaseController
                 ->where('is_active', 1)
                 ->orderBy('name', 'ASC')
                 ->findAll();
-            $recentMessages = (new WhatsappMessageModel())
-                ->orderBy('id', 'DESC')
-                ->findAll(10);
 
             try {
                 $db = \Config\Database::connect();
@@ -51,7 +47,6 @@ class WhatsappController extends BaseController
 
         return view('admin/whatsapp/compose', $this->viewData('Kirim Pesan WhatsApp', 'message_whatsapp') + [
             'templates'      => $templates,
-            'recentMessages' => $recentMessages,
             'journals'       => $journals,
             'databaseError'  => $databaseError,
         ]);
