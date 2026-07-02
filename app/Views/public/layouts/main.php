@@ -39,7 +39,7 @@
 
 <?= $this->include('public/partials/footer') ?>
 
-    <script src="<?= base_url('plpi/js/public.js') ?>"></script>
+    <script src="<?= base_url('plpi/js/public.js?v=2026070201') ?>"></script>
     <script>
         (function () {
             const tokenName = <?= json_encode(csrf_token()) ?>;

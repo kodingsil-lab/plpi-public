@@ -908,6 +908,63 @@ a {
     background: #0f172a;
 }
 
+.youtube-lite {
+    display: block;
+    width: 100%;
+    max-width: 860px;
+    aspect-ratio: 16 / 9;
+    margin: 24px 0;
+    overflow: hidden;
+    border-radius: 16px;
+    background:
+        linear-gradient(rgba(7, 24, 47, 0.26), rgba(7, 24, 47, 0.26)),
+        linear-gradient(135deg, #123657 0%, #0f766e 100%);
+}
+
+.youtube-lite-button {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    gap: 10px;
+    border: 0;
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-weight: 800;
+}
+
+.youtube-lite-play {
+    width: 62px;
+    height: 62px;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    background: #fff;
+}
+
+.youtube-lite-play::before {
+    content: "";
+    width: 0;
+    height: 0;
+    margin-left: 4px;
+    border-top: 13px solid transparent;
+    border-bottom: 13px solid transparent;
+    border-left: 20px solid #0f766e;
+}
+
+.youtube-lite-label {
+    font-size: 16px;
+}
+
+.youtube-lite iframe {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    border-radius: 0;
+}
+
 .article-share {
     display: flex;
     justify-content: space-between;

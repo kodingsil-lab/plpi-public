@@ -60,13 +60,13 @@ class PublicPage extends BaseController
 
     public function detailArtikel(string $slug)
     {
-        $articles = $this->getArticles();
+        $articles = $this->getArticles(false);
 
         $article = null;
 
         foreach ($articles as $item) {
             if ($item['slug'] === $slug) {
-                $article = $item;
+                $article = $this->getArticleBySlug($slug) ?? $item;
                 break;
             }
         }
@@ -749,13 +749,17 @@ class PublicPage extends BaseController
         ];
     }
 
-    private function getArticles(): array
+    private function getArticles(bool $includeContent = false): array
     {
         try {
             $db = \Config\Database::connect();
             if ($db->tableExists('educational_articles') && $db->tableExists('article_categories')) {
+                $select = $includeContent
+                    ? 'educational_articles.*, article_categories.name AS category_name'
+                    : 'educational_articles.id, educational_articles.slug, educational_articles.title, educational_articles.summary, educational_articles.cover_path, educational_articles.image_alt, educational_articles.published_at, educational_articles.created_at, educational_articles.updated_at, educational_articles.sort_order, article_categories.name AS category_name';
+
                 $rows = (new EducationalArticleModel())
-                    ->select('educational_articles.*, article_categories.name AS category_name')
+                    ->select($select)
                     ->join('article_categories', 'article_categories.id = educational_articles.category_id', 'left')
                     ->where('educational_articles.status', 'published')
                     ->orderBy('educational_articles.sort_order', 'ASC')
@@ -764,33 +768,7 @@ class PublicPage extends BaseController
                     ->findAll();
 
                 if ($rows !== []) {
-                    return array_map(function (array $row): array {
-                        $contentHtml = $this->cleanArticleHtml((string) ($row['content'] ?? ''));
-                        $plainContent = trim(strip_tags($contentHtml));
-                        $summary = trim((string) ($row['summary'] ?? ''));
-                        if ($summary === '') {
-                            $summary = word_limiter($plainContent, 28);
-                        }
-                        $publishedAt = (string) ($row['published_at'] ?? $row['created_at'] ?? '');
-                        $date = $publishedAt !== '' ? date('d F Y', strtotime($publishedAt)) : date('d F Y');
-                        $image = trim((string) ($row['cover_path'] ?? '')) !== ''
-                            ? site_url('article-cover/' . (int) ($row['id'] ?? 0) . '?v=' . rawurlencode((string) ($row['updated_at'] ?? '')))
-                            : 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=1200&q=80';
-
-                        return [
-                            'id'           => (int) ($row['id'] ?? 0),
-                            'slug'         => (string) ($row['slug'] ?? ''),
-                            'title'        => (string) ($row['title'] ?? ''),
-                            'category'     => (string) ($row['category_name'] ?? 'Artikel Edukatif'),
-                            'date'         => $date,
-                            'read_time'    => $this->estimateArticleReadTime($plainContent),
-                            'image'        => $image,
-                            'image_alt'    => (string) ($row['image_alt'] ?? $row['title'] ?? 'Cover artikel edukatif'),
-                            'summary'      => $summary,
-                            'content'      => $this->htmlToParagraphs($contentHtml),
-                            'content_html' => $contentHtml,
-                        ];
-                    }, $rows);
+                    return array_map(fn (array $row): array => $this->mapArticleRow($row, $includeContent), $rows);
                 }
             }
         } catch (\Throwable $e) {
@@ -865,6 +843,69 @@ class PublicPage extends BaseController
         ];
     }
 
+    private function getArticleBySlug(string $slug): ?array
+    {
+        try {
+            $db = \Config\Database::connect();
+            if (! $db->tableExists('educational_articles') || ! $db->tableExists('article_categories')) {
+                return null;
+            }
+
+            $row = (new EducationalArticleModel())
+                ->select('educational_articles.*, article_categories.name AS category_name')
+                ->join('article_categories', 'article_categories.id = educational_articles.category_id', 'left')
+                ->where('educational_articles.status', 'published')
+                ->where('educational_articles.slug', $slug)
+                ->first();
+
+            return is_array($row) ? $this->mapArticleRow($row, true) : null;
+        } catch (\Throwable $e) {
+            return null;
+        }
+    }
+
+    private function mapArticleRow(array $row, bool $includeContent): array
+    {
+        $contentHtml = '';
+        $plainContent = '';
+        if ($includeContent) {
+            $contentHtml = $this->cleanArticleHtml((string) ($row['content'] ?? ''));
+            $plainContent = trim(strip_tags($contentHtml));
+        }
+
+        $summary = trim((string) ($row['summary'] ?? ''));
+        if ($summary === '' && $plainContent !== '') {
+            $summary = word_limiter($plainContent, 28);
+        }
+
+        $publishedAt = (string) ($row['published_at'] ?? $row['created_at'] ?? '');
+        $date = $publishedAt !== '' ? date('d F Y', strtotime($publishedAt)) : date('d F Y');
+        $image = trim((string) ($row['cover_path'] ?? '')) !== ''
+            ? site_url('article-cover/' . (int) ($row['id'] ?? 0) . '?v=' . rawurlencode((string) ($row['updated_at'] ?? '')))
+            : 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=1200&q=80';
+
+        $article = [
+            'id'           => (int) ($row['id'] ?? 0),
+            'slug'         => (string) ($row['slug'] ?? ''),
+            'title'        => (string) ($row['title'] ?? ''),
+            'category'     => (string) ($row['category_name'] ?? 'Artikel Edukatif'),
+            'date'         => $date,
+            'read_time'    => $this->estimateArticleReadTime($includeContent ? $plainContent : $summary),
+            'image'        => $image,
+            'image_alt'    => (string) ($row['image_alt'] ?? $row['title'] ?? 'Cover artikel edukatif'),
+            'summary'      => $summary,
+            'content'      => [],
+            'content_html' => '',
+        ];
+
+        if ($includeContent) {
+            $article['content'] = $this->htmlToParagraphs($contentHtml);
+            $article['content_html'] = $contentHtml;
+        }
+
+        return $article;
+    }
+
     private function cleanArticleHtml(string $html): string
     {
         if (trim($html) === '') {
@@ -880,6 +921,7 @@ class PublicPage extends BaseController
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->loadHTML('<?xml encoding="utf-8" ?><div>' . $html . '</div>', LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
         $this->sanitizeDomNode($dom, $allowedAttrs);
+        $this->replaceYoutubeIframesInDom($dom);
         $clean = $dom->saveHTML() ?: '';
         libxml_clear_errors();
         libxml_use_internal_errors($previous);
@@ -962,6 +1004,47 @@ class PublicPage extends BaseController
             }
 
             $this->sanitizeDomNode($child, $allowedAttrs);
+        }
+    }
+
+    private function replaceYoutubeIframesInDom(DOMDocument $dom): void
+    {
+        $iframes = [];
+        foreach ($dom->getElementsByTagName('iframe') as $iframe) {
+            if ($iframe instanceof DOMElement) {
+                $iframes[] = $iframe;
+            }
+        }
+
+        foreach ($iframes as $iframe) {
+            $src = trim($iframe->getAttribute('src'));
+            if ($this->normalizeYoutubeEmbedUrl($src) === '') {
+                continue;
+            }
+
+            $title = trim($iframe->getAttribute('title')) ?: 'Video YouTube';
+
+            $placeholder = $dom->createElement('div');
+            $placeholder->setAttribute('class', 'youtube-lite');
+            $placeholder->setAttribute('data-youtube-src', $src);
+            $placeholder->setAttribute('data-youtube-title', $title);
+
+            $button = $dom->createElement('button');
+            $button->setAttribute('type', 'button');
+            $button->setAttribute('class', 'youtube-lite-button');
+            $button->setAttribute('aria-label', 'Putar ' . $title);
+
+            $play = $dom->createElement('span');
+            $play->setAttribute('class', 'youtube-lite-play');
+
+            $label = $dom->createElement('span', 'Putar video');
+            $label->setAttribute('class', 'youtube-lite-label');
+
+            $button->appendChild($play);
+            $button->appendChild($label);
+            $placeholder->appendChild($button);
+
+            $iframe->parentNode?->replaceChild($placeholder, $iframe);
         }
     }
 

@@ -171,6 +171,29 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    document.querySelectorAll('.youtube-lite').forEach(function (wrapper) {
+        const button = wrapper.querySelector('.youtube-lite-button');
+        const src = wrapper.getAttribute('data-youtube-src') || '';
+        const title = wrapper.getAttribute('data-youtube-title') || 'Video YouTube';
+
+        if (!button || !src) return;
+
+        button.addEventListener('click', function () {
+            const iframe = document.createElement('iframe');
+            const separator = src.indexOf('?') === -1 ? '?' : '&';
+
+            iframe.src = src + separator + 'autoplay=1';
+            iframe.title = title;
+            iframe.loading = 'lazy';
+            iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+            iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+            iframe.allowFullscreen = true;
+
+            wrapper.replaceChildren(iframe);
+            wrapper.classList.add('is-playing');
+        });
+    });
+
     const countElements = document.querySelectorAll('.count-up');
 
     if (countElements.length > 0) {
