@@ -73,7 +73,7 @@ foreach (($templates ?? []) as $template) {
                 <div class="placeholder-box">
                     <span>Placeholder Template</span>
                     <div>
-                        <button type="button" data-token="{judul_artikel}">{judul_artikel}</button>
+                        <button type="button" data-token="{judul}">{judul}</button>
                         <button type="button" data-token="{nama_jurnal}">{nama_jurnal}</button>
                         <button type="button" data-token="{jurnal}">{jurnal}</button>
                         <button type="button" data-token="{link_jurnal}">{link_jurnal}</button>
@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const journalName = journalNameInput && journalNameInput.value.trim() ? journalNameInput.value.trim() : '';
         const journalUrl = selectedJournalUrl();
         const replacements = {
-            '{judul_artikel}': articleTitle,
+            '{judul}': articleTitle,
             '{nama_jurnal}': journalName,
             '{jurnal}': journalName,
             '{link_jurnal}': journalUrl
