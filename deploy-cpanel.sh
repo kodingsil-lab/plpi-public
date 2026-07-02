@@ -123,6 +123,7 @@ write_env() {
 CI_ENVIRONMENT = production
 
 app.baseURL = '$APP_URL'
+app.indexPage = ''
 
 database.default.hostname = $DB_HOST
 database.default.database = $DB_NAME
