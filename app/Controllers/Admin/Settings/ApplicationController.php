@@ -36,6 +36,7 @@ class ApplicationController extends BaseController
             'row'             => $row,
             'databaseError'   => $databaseError,
             'timezoneOptions' => plpi_timezone_options(),
+            'smtpEnvLocked'   => $this->smtpConfiguredFromEnv(),
         ]);
     }
 
@@ -54,24 +55,29 @@ class ApplicationController extends BaseController
             return redirect()->back()->withInput()->with('error', 'Zona waktu yang dipilih tidak valid.');
         }
 
-        $smtpPassword = trim((string) $this->request->getPost('smtp_pass'));
-        $smtpPort = (int) $this->request->getPost('smtp_port');
-        $smtpCrypto = (string) $this->request->getPost('smtp_crypto');
-        if (! in_array($smtpCrypto, ['', 'tls', 'ssl'], true)) {
-            return redirect()->back()->withInput()->with('error', 'Enkripsi SMTP tidak valid.');
-        }
-
         $payload = [
             'app_timezone'     => $timezone,
-            'smtp_host'        => trim((string) $this->request->getPost('smtp_host')),
-            'smtp_port'        => $smtpPort > 0 ? $smtpPort : null,
-            'smtp_user'        => trim((string) $this->request->getPost('smtp_user')),
-            'smtp_crypto'      => $smtpCrypto,
-            'mail_from_email'  => trim((string) $this->request->getPost('mail_from_email')),
-            'mail_from_name'   => trim((string) $this->request->getPost('mail_from_name')),
         ];
-        if ($smtpPassword !== '') {
-            $payload['smtp_pass'] = $this->encryptSecret($smtpPassword);
+
+        if (! $this->smtpConfiguredFromEnv()) {
+            $smtpPassword = trim((string) $this->request->getPost('smtp_pass'));
+            $smtpPort = (int) $this->request->getPost('smtp_port');
+            $smtpCrypto = (string) $this->request->getPost('smtp_crypto');
+            if (! in_array($smtpCrypto, ['', 'tls', 'ssl'], true)) {
+                return redirect()->back()->withInput()->with('error', 'Enkripsi SMTP tidak valid.');
+            }
+
+            $payload += [
+                'smtp_host'        => trim((string) $this->request->getPost('smtp_host')),
+                'smtp_port'        => $smtpPort > 0 ? $smtpPort : null,
+                'smtp_user'        => trim((string) $this->request->getPost('smtp_user')),
+                'smtp_crypto'      => $smtpCrypto,
+                'mail_from_email'  => trim((string) $this->request->getPost('mail_from_email')),
+                'mail_from_name'   => trim((string) $this->request->getPost('mail_from_name')),
+            ];
+            if ($smtpPassword !== '') {
+                $payload['smtp_pass'] = $this->encryptSecret($smtpPassword);
+            }
         }
         $fileMap = [
             'app_logo' => ['header_logo_path', 'login_logo_path', 'public_logo_path'],
@@ -149,5 +155,12 @@ class ApplicationController extends BaseController
         } catch (\Throwable $e) {
             return $value;
         }
+    }
+
+    private function smtpConfiguredFromEnv(): bool
+    {
+        return trim((string) env('plpi.smtp.host', '')) !== ''
+            || trim((string) env('plpi.smtp.user', '')) !== ''
+            || trim((string) env('plpi.smtp.password', '')) !== '';
     }
 }

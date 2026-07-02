@@ -149,13 +149,13 @@ class WhatsappController extends BaseController
         }
 
         $data = $this->validator->getValidated();
-        $settings = (new AppSettingModel())->first() ?: [];
+        $settings = $this->mailSettings();
         $email = \Config\Services::email(null, false);
         $email->initialize([
             'protocol'    => 'smtp',
             'SMTPHost'    => (string) ($settings['smtp_host'] ?? ''),
             'SMTPUser'    => (string) ($settings['smtp_user'] ?? ''),
-            'SMTPPass'    => $this->decryptSecret((string) ($settings['smtp_pass'] ?? '')),
+            'SMTPPass'    => (string) ($settings['smtp_pass'] ?? ''),
             'SMTPPort'    => (int) ($settings['smtp_port'] ?? 587),
             'SMTPCrypto'  => (string) ($settings['smtp_crypto'] ?? 'tls'),
             'mailType'    => 'html',
@@ -418,13 +418,50 @@ class WhatsappController extends BaseController
 
     private function mailSettingsReady(): bool
     {
-        $settings = (new AppSettingModel())->first() ?: [];
+        $settings = $this->mailSettings();
 
         return trim((string) ($settings['smtp_host'] ?? '')) !== ''
             && trim((string) ($settings['smtp_user'] ?? '')) !== ''
-            && trim($this->decryptSecret((string) ($settings['smtp_pass'] ?? ''))) !== ''
+            && trim((string) ($settings['smtp_pass'] ?? '')) !== ''
             && (int) ($settings['smtp_port'] ?? 0) > 0
             && trim((string) ($settings['mail_from_email'] ?? $settings['smtp_user'] ?? '')) !== '';
+    }
+
+    private function mailSettings(): array
+    {
+        $database = (new AppSettingModel())->first() ?: [];
+        $env = [
+            'smtp_host'       => trim((string) env('plpi.smtp.host', '')),
+            'smtp_user'       => trim((string) env('plpi.smtp.user', '')),
+            'smtp_pass'       => (string) env('plpi.smtp.password', ''),
+            'smtp_port'       => (int) env('plpi.smtp.port', 0),
+            'smtp_crypto'     => trim((string) env('plpi.smtp.crypto', '')),
+            'mail_from_email' => trim((string) env('plpi.mail.fromEmail', '')),
+            'mail_from_name'  => trim((string) env('plpi.mail.fromName', '')),
+        ];
+
+        $hasEnvSmtp = $env['smtp_host'] !== '' || $env['smtp_user'] !== '' || $env['smtp_pass'] !== '';
+        if ($hasEnvSmtp) {
+            return [
+                'smtp_host'       => $env['smtp_host'],
+                'smtp_user'       => $env['smtp_user'],
+                'smtp_pass'       => $env['smtp_pass'],
+                'smtp_port'       => $env['smtp_port'] > 0 ? $env['smtp_port'] : 587,
+                'smtp_crypto'     => $env['smtp_crypto'] !== '' ? $env['smtp_crypto'] : 'tls',
+                'mail_from_email' => $env['mail_from_email'] !== '' ? $env['mail_from_email'] : $env['smtp_user'],
+                'mail_from_name'  => $env['mail_from_name'] !== '' ? $env['mail_from_name'] : 'PLPI',
+            ];
+        }
+
+        return [
+            'smtp_host'       => (string) ($database['smtp_host'] ?? ''),
+            'smtp_user'       => (string) ($database['smtp_user'] ?? ''),
+            'smtp_pass'       => $this->decryptSecret((string) ($database['smtp_pass'] ?? '')),
+            'smtp_port'       => (int) ($database['smtp_port'] ?? 587),
+            'smtp_crypto'     => (string) ($database['smtp_crypto'] ?? 'tls'),
+            'mail_from_email' => (string) ($database['mail_from_email'] ?? $database['smtp_user'] ?? ''),
+            'mail_from_name'  => (string) ($database['mail_from_name'] ?? 'PLPI'),
+        ];
     }
 
     private function decryptSecret(string $value): string

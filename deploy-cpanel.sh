@@ -17,6 +17,13 @@ DB_PASS="${PLPI_DB_PASS:-}"
 DB_PORT="${DB_PORT:-3306}"
 ENCRYPTION_KEY="${ENCRYPTION_KEY:-hex2bin:9b7d0c3f2a1e4d5c6b7f8091a2b3c4d59e8f7a6b5c4d3e2f1a0b9c8d7e6f5a4}"
 COMPOSER_BIN="${COMPOSER_BIN:-}"
+SMTP_HOST="${PLPI_SMTP_HOST:-plpi.unisap.ac.id}"
+SMTP_PORT="${PLPI_SMTP_PORT:-465}"
+SMTP_USER="${PLPI_SMTP_USER:-info@plpi.unisap.ac.id}"
+SMTP_PASS="${PLPI_SMTP_PASS:-}"
+SMTP_CRYPTO="${PLPI_SMTP_CRYPTO:-ssl}"
+MAIL_FROM_EMAIL="${PLPI_MAIL_FROM_EMAIL:-info@plpi.unisap.ac.id}"
+MAIL_FROM_NAME="${PLPI_MAIL_FROM_NAME:-Pusat Layanan Publikasi Ilmiah}"
 
 ACTION="${1:-install}"
 
@@ -119,6 +126,10 @@ install_dependencies() {
 
 write_env() {
     log "Tulis .env production"
+    if [ -z "$SMTP_PASS" ] && [ -f "$APP_DIR/.env" ]; then
+        SMTP_PASS="$(awk -F '=' '/^plpi\.smtp\.password[[:space:]]*=/{sub(/^[[:space:]]*/, "", $2); print $2; exit}' "$APP_DIR/.env" | sed "s/^'//;s/'$//")"
+    fi
+
     cat > "$APP_DIR/.env" <<EOF
 CI_ENVIRONMENT = production
 
@@ -134,6 +145,14 @@ database.default.DBPrefix =
 database.default.port = $DB_PORT
 
 encryption.key = $ENCRYPTION_KEY
+
+plpi.smtp.host = $SMTP_HOST
+plpi.smtp.port = $SMTP_PORT
+plpi.smtp.user = $SMTP_USER
+plpi.smtp.password = '$SMTP_PASS'
+plpi.smtp.crypto = $SMTP_CRYPTO
+plpi.mail.fromEmail = $MAIL_FROM_EMAIL
+plpi.mail.fromName = '$MAIL_FROM_NAME'
 EOF
     chmod 600 "$APP_DIR/.env" || true
 }
