@@ -191,7 +191,7 @@
         </main>
     </div>
 
-    <script defer src="<?= base_url('plpi/js/admin-editor.js?v=2026070201') ?>"></script>
+    <script defer src="<?= base_url('plpi/js/admin-editor.js?v=2026070202') ?>"></script>
     <script defer src="<?= base_url('plpi/js/admin-table.js?v=2026070201') ?>"></script>
     <script>
         (function () {

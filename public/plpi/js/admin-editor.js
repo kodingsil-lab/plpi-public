@@ -69,6 +69,9 @@ document.addEventListener('DOMContentLoaded', function () {
         convert_urls: false,
         relative_urls: false,
         remove_script_host: false,
+        extended_valid_elements: 'iframe[src|title|width|height|allow|allowfullscreen|frameborder|loading|referrerpolicy]',
+        valid_children: '+body[iframe]',
+        media_live_embeds: true,
         entity_encoding: 'raw',
         content_style: [
             'html,body{font-family:Arial,Helvetica,sans-serif!important;font-size:14px;font-weight:400!important;line-height:1.65;color:#233348;padding:12px;}',
@@ -80,7 +83,8 @@ document.addEventListener('DOMContentLoaded', function () {
             'blockquote p:last-child{margin-bottom:0;}',
             'a{color:#0f766e;}',
             'table{border-collapse:collapse;width:100%;}',
-            'td,th{border:1px solid #dbe5ef;padding:8px;}'
+            'td,th{border:1px solid #dbe5ef;padding:8px;}',
+            'iframe{display:block;width:100%;max-width:760px;aspect-ratio:16/9;height:auto;margin:18px 0;border:0;border-radius:14px;}'
         ].join(''),
         skin: 'oxide',
         content_css: false,

@@ -10,6 +10,7 @@ use App\Models\EducationalArticleModel;
 use App\Models\EditorReviewerApplicationModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use DOMDocument;
+use DOMElement;
 use DOMNode;
 
 class PublicPage extends BaseController
@@ -872,6 +873,7 @@ class PublicPage extends BaseController
 
         $allowedAttrs = [
             'a' => ['href', 'title', 'target', 'rel'],
+            'iframe' => ['src', 'title', 'width', 'height', 'allow', 'allowfullscreen', 'frameborder', 'loading', 'referrerpolicy'],
         ];
 
         $previous = libxml_use_internal_errors(true);
@@ -914,7 +916,7 @@ class PublicPage extends BaseController
             return;
         }
 
-        $allowedTags = ['p', 'br', 'strong', 'b', 'em', 'i', 'u', 'ul', 'ol', 'li', 'h2', 'h3', 'h4', 'blockquote', 'a', 'table', 'thead', 'tbody', 'tr', 'td', 'th', 'div'];
+        $allowedTags = ['p', 'br', 'strong', 'b', 'em', 'i', 'u', 'ul', 'ol', 'li', 'h2', 'h3', 'h4', 'blockquote', 'a', 'table', 'thead', 'tbody', 'tr', 'td', 'th', 'div', 'iframe'];
 
         for ($i = $node->childNodes->length - 1; $i >= 0; $i--) {
             $child = $node->childNodes->item($i);
@@ -950,10 +952,84 @@ class PublicPage extends BaseController
                         }
                     }
                 }
+
+                if ($tag === 'iframe') {
+                    if (! $child instanceof DOMElement || ! $this->sanitizeYoutubeIframe($child)) {
+                        $child->parentNode?->removeChild($child);
+                        continue;
+                    }
+                }
             }
 
             $this->sanitizeDomNode($child, $allowedAttrs);
         }
+    }
+
+    private function sanitizeYoutubeIframe(DOMElement $iframe): bool
+    {
+        $src = trim($iframe->getAttribute('src'));
+        $embedUrl = $this->normalizeYoutubeEmbedUrl($src);
+        if ($embedUrl === '') {
+            return false;
+        }
+
+        $iframe->setAttribute('src', $embedUrl);
+        $iframe->setAttribute('loading', 'lazy');
+        $iframe->setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+        $iframe->setAttribute('allowfullscreen', 'allowfullscreen');
+
+        if (trim($iframe->getAttribute('title')) === '') {
+            $iframe->setAttribute('title', 'Video YouTube');
+        }
+
+        if (trim($iframe->getAttribute('allow')) === '') {
+            $iframe->setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+        }
+
+        return true;
+    }
+
+    private function normalizeYoutubeEmbedUrl(string $src): string
+    {
+        if ($src === '' || preg_match('/^\s*javascript:/i', $src) === 1) {
+            return '';
+        }
+
+        $parts = parse_url($src);
+        if (! is_array($parts)) {
+            return '';
+        }
+
+        $scheme = strtolower((string) ($parts['scheme'] ?? ''));
+        $host = strtolower((string) ($parts['host'] ?? ''));
+        $path = (string) ($parts['path'] ?? '');
+        $query = (string) ($parts['query'] ?? '');
+
+        if ($scheme !== 'https') {
+            return '';
+        }
+
+        $youtubeHosts = ['youtube.com', 'www.youtube.com', 'youtube-nocookie.com', 'www.youtube-nocookie.com'];
+        if (in_array($host, $youtubeHosts, true) && preg_match('#^/embed/[-_A-Za-z0-9]+#', $path) === 1) {
+            return 'https://' . $host . $path . ($query !== '' ? '?' . $query : '');
+        }
+
+        if (in_array($host, ['youtube.com', 'www.youtube.com'], true) && $path === '/watch') {
+            parse_str($query, $queryParams);
+            $videoId = (string) ($queryParams['v'] ?? '');
+            if (preg_match('/^[-_A-Za-z0-9]{6,}$/', $videoId) === 1) {
+                return 'https://www.youtube.com/embed/' . $videoId;
+            }
+        }
+
+        if ($host === 'youtu.be') {
+            $videoId = trim($path, '/');
+            if (preg_match('/^[-_A-Za-z0-9]{6,}$/', $videoId) === 1) {
+                return 'https://www.youtube.com/embed/' . $videoId;
+            }
+        }
+
+        return '';
     }
 
     private function isRateLimited(string $bucket, int $maxAttempts, int $windowSeconds): bool

@@ -896,6 +896,18 @@ a {
     font-weight: 700;
 }
 
+.article-prose iframe {
+    display: block;
+    width: 100%;
+    max-width: 860px;
+    aspect-ratio: 16 / 9;
+    height: auto;
+    margin: 24px 0;
+    border: 0;
+    border-radius: 16px;
+    background: #0f172a;
+}
+
 .article-share {
     display: flex;
     justify-content: space-between;
