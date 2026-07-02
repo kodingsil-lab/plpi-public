@@ -567,25 +567,67 @@ class PublicPage extends BaseController
 
     private function getStats(): array
     {
+        $totalRequests = 0;
+        $publishedLetters = 0;
+        $waitingRequests = 0;
+        $processedRequests = 0;
+
+        try {
+            $db = \Config\Database::connect();
+
+            if ($db->tableExists('loa_requests')) {
+                $totalRequests = (int) $db->table('loa_requests')->countAllResults();
+
+                if ($db->tableExists('loa_letters')) {
+                    $publishedLetters = (int) $db->table('loa_letters')
+                        ->where('status', 'published')
+                        ->countAllResults();
+
+                    $waitingRequests = (int) $db->table('loa_requests')
+                        ->whereIn('status', ['pending', 'revision'])
+                        ->where("NOT EXISTS(SELECT 1 FROM loa_letters ll WHERE ll.loa_request_id = loa_requests.id AND ll.status = 'published')", null, false)
+                        ->countAllResults();
+
+                    $processedRequests = (int) $db->table('loa_requests')
+                        ->where('status', 'approved')
+                        ->where("NOT EXISTS(SELECT 1 FROM loa_letters ll WHERE ll.loa_request_id = loa_requests.id AND ll.status = 'published')", null, false)
+                        ->countAllResults();
+                } else {
+                    $waitingRequests = (int) $db->table('loa_requests')
+                        ->whereIn('status', ['pending', 'revision'])
+                        ->countAllResults();
+
+                    $processedRequests = (int) $db->table('loa_requests')
+                        ->where('status', 'approved')
+                        ->countAllResults();
+                }
+            }
+        } catch (\Throwable $e) {
+            $totalRequests = 0;
+            $publishedLetters = 0;
+            $waitingRequests = 0;
+            $processedRequests = 0;
+        }
+
         return [
             [
                 'label' => 'Permohonan',
-                'value' => 52,
+                'value' => $totalRequests,
                 'note'  => 'Total pengajuan masuk',
             ],
             [
                 'label' => 'LoA Terbit',
-                'value' => 48,
+                'value' => $publishedLetters,
                 'note'  => 'Sudah disetujui',
             ],
             [
                 'label' => 'Menunggu',
-                'value' => 2,
+                'value' => $waitingRequests,
                 'note'  => 'Menunggu tinjauan admin',
             ],
             [
                 'label' => 'Diproses',
-                'value' => 2,
+                'value' => $processedRequests,
                 'note'  => 'Sedang ditinjau',
             ],
         ];

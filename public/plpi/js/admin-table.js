@@ -12,8 +12,8 @@ document.addEventListener('DOMContentLoaded', function () {
         '    <p data-confirm-message>Apakah Anda yakin ingin melanjutkan?</p>',
         '  </div>',
         '  <div class="admin-confirm-actions">',
-        '    <button class="admin-btn secondary" type="button" data-confirm-cancel><iconify-icon icon="mdi:close"></iconify-icon>Batal</button>',
-        '    <button class="admin-btn danger" type="button" data-confirm-ok><iconify-icon icon="mdi:check"></iconify-icon>Ya, lanjutkan</button>',
+        '    <button class="admin-btn danger" type="button" data-confirm-cancel><iconify-icon icon="mdi:close"></iconify-icon>Batal</button>',
+        '    <button class="admin-btn primary" type="button" data-confirm-ok><iconify-icon icon="mdi:check"></iconify-icon>Ya, lanjutkan</button>',
         '  </div>',
         '</section>'
     ].join('');

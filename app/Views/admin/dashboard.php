@@ -10,10 +10,10 @@ $statusMeta = static function (array $row): array {
     }
 
     return match ($status) {
-        'approved' => ['label' => 'Disetujui', 'class' => 'done'],
-        'rejected' => ['label' => 'Ditolak', 'class' => 'muted'],
+        'approved' => ['label' => 'Disetujui', 'class' => 'info'],
+        'rejected' => ['label' => 'Ditolak', 'class' => 'danger'],
         'revision' => ['label' => 'Revisi', 'class' => 'info'],
-        default => ['label' => 'Menunggu', 'class' => 'info'],
+        default => ['label' => 'Menunggu', 'class' => 'warning'],
     };
 };
 ?>

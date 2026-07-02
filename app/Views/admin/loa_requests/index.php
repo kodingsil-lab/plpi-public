@@ -8,9 +8,10 @@ $statusLabels = [
     'rejected' => 'Ditolak',
 ];
 $statusClass = static fn(string $status): string => match ($status) {
-    'approved' => 'done',
-    'rejected' => 'muted',
-    default => 'info',
+    'approved' => 'info',
+    'revision' => 'info',
+    'rejected' => 'danger',
+    default => 'warning',
 };
 $tableRows = [];
 foreach (($rows ?? []) as $index => $row) {

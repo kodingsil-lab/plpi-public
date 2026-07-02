@@ -28,7 +28,7 @@ if (! function_exists('invoice_status_class')) {
     {
         return match ($status) {
             'Lunas' => 'done',
-            'Menunggu Pembayaran' => 'info',
+            'Menunggu Pembayaran' => 'warning',
             default => 'muted',
         };
     }

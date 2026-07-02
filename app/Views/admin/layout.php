@@ -21,7 +21,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="<?= base_url('plpi/css/admin.css?v=2026070109') ?>">
+    <link rel="stylesheet" href="<?= base_url('plpi/css/admin.css?v=2026070202') ?>">
     <script defer src="https://code.iconify.design/iconify-icon/3.0.0/iconify-icon.min.js"></script>
 </head>
 <body>
@@ -192,7 +192,7 @@
     </div>
 
     <script defer src="<?= base_url('plpi/js/admin-editor.js?v=2026070102') ?>"></script>
-    <script defer src="<?= base_url('plpi/js/admin-table.js?v=2026070102') ?>"></script>
+    <script defer src="<?= base_url('plpi/js/admin-table.js?v=2026070201') ?>"></script>
     <script>
         (function () {
             const tokenName = <?= json_encode(csrf_token()) ?>;
