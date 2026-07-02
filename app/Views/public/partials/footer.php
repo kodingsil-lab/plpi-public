@@ -24,8 +24,8 @@ $publicLogoUrl = $publicLogoPath !== '' ? plpi_asset_url($publicLogoPath) . '?v=
             </a>
 
             <p>
-                Sistem layanan public untuk pengajuan, pemantauan, dan verifikasi Letter of Acceptance
-                serta penyediaan informasi jurnal dan literasi publikasi ilmiah.
+                PLPI dikelola oleh UPT Publikasi dan Penerbitan Universitas San Pedro sebagai layanan pengajuan LoA,
+                informasi jurnal, pendampingan publikasi, dan edukasi literasi ilmiah yang terintegrasi.
             </p>
 
             <div class="footer-badges">

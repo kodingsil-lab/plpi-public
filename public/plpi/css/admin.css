@@ -756,8 +756,9 @@ button {
 }
 
 .admin-btn.secondary {
-    background: var(--soft-green);
-    color: var(--green);
+    border-color: #14b8a6;
+    background: #14b8a6;
+    color: #ffffff;
 }
 
 .admin-btn.danger {
@@ -781,7 +782,9 @@ button {
 }
 
 .admin-btn.secondary:hover {
-    background: var(--soft-green-2);
+    border-color: #0f766e;
+    background: #0f766e;
+    color: #ffffff;
 }
 
 .admin-btn.danger:hover {
@@ -1477,28 +1480,28 @@ mark.pending {
 }
 
 .status-pill.done {
-    background: #e7f6ef;
-    color: #157347;
+    background: #16a34a;
+    color: #ffffff;
 }
 
 .status-pill.info {
-    background: #eaf2ff;
-    color: #1d4ed8;
+    background: #2563eb;
+    color: #ffffff;
 }
 
 .status-pill.warning {
-    background: #fff4d8;
-    color: #a15c07;
+    background: #f59e0b;
+    color: #ffffff;
 }
 
 .status-pill.danger {
-    background: #fff1f2;
-    color: #b42318;
+    background: #dc2626;
+    color: #ffffff;
 }
 
 .status-pill.muted {
-    background: #f1f5f9;
-    color: #64748b;
+    background: #64748b;
+    color: #ffffff;
 }
 
 .table-logo-preview {

@@ -21,6 +21,7 @@ class WhatsappController extends BaseController
 
         $templates = [];
         $recentMessages = [];
+        $journals = [];
         $databaseError = null;
 
         if ($this->tablesReady()) {
@@ -32,6 +33,18 @@ class WhatsappController extends BaseController
             $recentMessages = (new WhatsappMessageModel())
                 ->orderBy('id', 'DESC')
                 ->findAll(10);
+
+            try {
+                $db = \Config\Database::connect();
+                if ($db->tableExists('journals')) {
+                    $journals = (new JournalModel())
+                        ->select('name, website_url')
+                        ->orderBy('name', 'ASC')
+                        ->findAll();
+                }
+            } catch (\Throwable $e) {
+                $journals = [];
+            }
         } else {
             $databaseError = 'Tabel WhatsApp belum tersedia. Jalankan migrasi terlebih dahulu.';
         }
@@ -39,6 +52,7 @@ class WhatsappController extends BaseController
         return view('admin/whatsapp/compose', $this->viewData('Kirim Pesan WhatsApp', 'message_whatsapp') + [
             'templates'      => $templates,
             'recentMessages' => $recentMessages,
+            'journals'       => $journals,
             'databaseError'  => $databaseError,
             'generatedUrl'   => session('generated_whatsapp_url'),
         ]);

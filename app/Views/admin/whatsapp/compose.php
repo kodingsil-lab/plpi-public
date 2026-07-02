@@ -59,7 +59,22 @@ foreach (($templates ?? []) as $template) {
 
                 <label>
                     <span>Nama Jurnal</span>
-                    <input id="journalNameInput" placeholder="Pilih / tulis jurnal">
+                    <select name="nama_jurnal" id="journalNameInput">
+                        <option value="">Pilih jurnal</option>
+                        <?php foreach (($journals ?? []) as $journal): ?>
+                            <?php
+                                $journalName = (string) ($journal['name'] ?? '');
+                                $journalUrl = (string) ($journal['website_url'] ?? '');
+                            ?>
+                            <option
+                                value="<?= esc($journalName, 'attr') ?>"
+                                data-url="<?= esc($journalUrl, 'attr') ?>"
+                                <?= old('nama_jurnal') === $journalName ? 'selected' : '' ?>
+                            >
+                                <?= esc($journalName) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
                 </label>
 
                 <div class="placeholder-box">
@@ -67,6 +82,8 @@ foreach (($templates ?? []) as $template) {
                     <div>
                         <button type="button" data-token="{judul_artikel}">{judul_artikel}</button>
                         <button type="button" data-token="{nama_jurnal}">{nama_jurnal}</button>
+                        <button type="button" data-token="{jurnal}">{jurnal}</button>
+                        <button type="button" data-token="{link_jurnal}">{link_jurnal}</button>
                     </div>
                 </div>
             </div>
@@ -117,10 +134,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const messageInput = document.getElementById('messageInput');
     const previewMessage = document.getElementById('previewMessage');
     const refreshPreviewBtn = document.getElementById('refreshPreviewBtn');
-    const fields = {
-        '{judul_artikel}': document.getElementById('articleTitleInput'),
-        '{nama_jurnal}': document.getElementById('journalNameInput')
-    };
+    const articleTitleInput = document.getElementById('articleTitleInput');
+    const journalNameInput = document.getElementById('journalNameInput');
     let activeTemplate = '';
     if (!select || !messageInput || !previewMessage) return;
 
@@ -132,13 +147,29 @@ document.addEventListener('DOMContentLoaded', function () {
         return selected ? selected.message : previewMessage.value;
     }
 
+    function selectedJournalUrl() {
+        if (!journalNameInput || !journalNameInput.selectedOptions || !journalNameInput.selectedOptions.length) {
+            return '';
+        }
+
+        return journalNameInput.selectedOptions[0].dataset.url || '';
+    }
+
+    function replaceTokens(text) {
+        const articleTitle = articleTitleInput && articleTitleInput.value.trim() ? articleTitleInput.value.trim() : '{judul_artikel}';
+        const journalName = journalNameInput && journalNameInput.value.trim() ? journalNameInput.value.trim() : '{nama_jurnal}';
+        const journalUrl = selectedJournalUrl() || '{link_jurnal}';
+
+        return text
+            .split('{judul_artikel}').join(articleTitle)
+            .split('{nama_jurnal}').join(journalName)
+            .split('{jurnal}').join(journalName)
+            .split('{link_jurnal}').join(journalUrl);
+    }
+
     function renderPreview() {
         let text = activeTemplate || selectedTemplateMessage();
-        Object.keys(fields).forEach(function (token) {
-            const input = fields[token];
-            const value = input && input.value.trim() ? input.value.trim() : token;
-            text = text.split(token).join(value);
-        });
+        text = replaceTokens(text);
         previewMessage.value = text;
         messageInput.value = text;
     }
@@ -156,10 +187,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    Object.keys(fields).forEach(function (token) {
-        if (fields[token]) {
-            fields[token].addEventListener('input', renderPreview);
-        }
+    [articleTitleInput, journalNameInput].forEach(function (field) {
+        if (!field) return;
+        field.addEventListener('input', renderPreview);
+        field.addEventListener('change', renderPreview);
     });
 
     document.querySelectorAll('[data-token]').forEach(function (button) {

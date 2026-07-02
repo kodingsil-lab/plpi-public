@@ -61,7 +61,6 @@ $statusMeta = static function (array $row): array {
             <div>
                 <span class="panel-kicker">Aktivitas LoA</span>
                 <h2>Permohonan LoA Terbaru</h2>
-                <p>Menampilkan 15 data terbaru dari semua status permohonan.</p>
             </div>
             <div class="panel-actions">
                 <a class="admin-btn primary" href="<?= site_url('dashboard/loa-requests') ?>"><iconify-icon icon="mdi:folder-edit-outline"></iconify-icon>Kelola LoA</a>

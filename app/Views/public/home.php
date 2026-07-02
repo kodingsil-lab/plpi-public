@@ -10,8 +10,9 @@
             <h1>Pusat Layanan Pendukung Publikasi Ilmiah</h1>
 
             <p>
-                PLPI merupakan portal informasi terintegrasi untuk membantu para penulis dalam proses 
-                pengajuan Letter of Acceptance jurnal, pemantauan dokumen, serta akses informasi jurnal dan literasi publikasi ilmiah.
+                PLPI merupakan portal informasi terintegrasi yang dikelola oleh UPT Publikasi dan Penerbitan Universitas San Pedro
+                untuk membantu para penulis dalam proses pengajuan Letter of Acceptance jurnal, pemantauan dokumen, serta akses
+                informasi jurnal dan literasi publikasi ilmiah.
             </p>
 
             <div class="home-hero-actions">
@@ -252,11 +253,10 @@
 <section class="section home-journal-section" id="profil-jurnal">
     <div class="container">
         <div class="section-heading center">
-            <span>Profil Jurnal</span>
-            <h2>Jurnal yang Tersedia</h2>
+            <span>Daftar Jurnal </span>
+            <h2>Pilih Jurnal Tujuan Publikasi</h2>
             <p>
-                Informasi jurnal ditampilkan secara ringkas agar penulis dapat mengenali
-                identitas dan ruang lingkup jurnal tujuan.
+                Temukan jurnal yang dikelola Universitas San Pedro
             </p>
         </div>
 
