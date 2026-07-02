@@ -4,11 +4,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function tinymceUrl() {
         const current = document.currentScript && document.currentScript.src ? document.currentScript.src : '';
-        if (current.indexOf('/plpi/js/admin-editor.js') !== -1) {
-            return current.replace('/plpi/js/admin-editor.js', '/plpi/vendor/tinymce/tinymce.min.js');
+        if (current) {
+            try {
+                const url = new URL(current, window.location.href);
+                if (url.pathname.indexOf('/plpi/js/admin-editor.js') !== -1) {
+                    url.pathname = url.pathname.replace('/plpi/js/admin-editor.js', '/plpi/vendor/tinymce/tinymce.min.js');
+                    url.search = '';
+                    return url.toString();
+                }
+            } catch (error) {
+                // Fall through to the public path below.
+            }
         }
 
-        return '/plpi-public/public/plpi/vendor/tinymce/tinymce.min.js';
+        return new URL('/plpi/vendor/tinymce/tinymce.min.js', window.location.origin).toString();
     }
 
     function loadTinyMce(callback) {
@@ -28,6 +37,11 @@ document.addEventListener('DOMContentLoaded', function () {
         script.defer = true;
         script.dataset.tinymceLoader = '1';
         script.addEventListener('load', callback, { once: true });
+        script.addEventListener('error', function () {
+            document.querySelectorAll(richSelector).forEach(function (textarea) {
+                textarea.style.display = '';
+            });
+        }, { once: true });
         document.head.appendChild(script);
     }
 

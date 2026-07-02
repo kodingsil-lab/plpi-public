@@ -100,6 +100,9 @@ php_errors.log
 # Composer
 #-------------------------
 vendor/
+!/public/plpi/vendor/
+!/public/plpi/vendor/tinymce/
+!/public/plpi/vendor/tinymce/**
 
 #-------------------------
 # IDE / Development Files
