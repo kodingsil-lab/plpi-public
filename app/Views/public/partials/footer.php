@@ -4,6 +4,36 @@ $appSettings = plpi_app_settings();
 $assetVersion = rawurlencode((string) ($appSettings['updated_at'] ?? time()));
 $publicLogoPath = (string) ($appSettings['public_logo_path'] ?? $appSettings['header_logo_path'] ?? '');
 $publicLogoUrl = $publicLogoPath !== '' ? plpi_asset_url($publicLogoPath) . '?v=' . $assetVersion : '';
+$footerArticles = [
+    ['title' => 'Cara Menulis Artikel Ilmiah', 'slug' => 'cara-menulis-artikel-ilmiah-yang-baik'],
+    ['title' => 'Struktur IMRAD', 'slug' => 'memahami-struktur-imrad-dalam-artikel-ilmiah'],
+    ['title' => 'Tips Memilih Jurnal', 'slug' => 'tips-memilih-jurnal-yang-tepat'],
+    ['title' => 'Etika Publikasi', 'slug' => 'etika-publikasi-ilmiah-yang-perlu-dipahami-penulis'],
+];
+
+try {
+    $db = \Config\Database::connect();
+    if ($db->tableExists('educational_articles')) {
+        $rows = $db->table('educational_articles')
+            ->select('title, slug')
+            ->where('status', 'published')
+            ->orderBy('sort_order', 'ASC')
+            ->orderBy('published_at', 'DESC')
+            ->orderBy('id', 'DESC')
+            ->limit(5)
+            ->get()
+            ->getResultArray();
+
+        if ($rows !== []) {
+            $footerArticles = array_map(static fn(array $row): array => [
+                'title' => (string) ($row['title'] ?? ''),
+                'slug' => (string) ($row['slug'] ?? ''),
+            ], $rows);
+        }
+    }
+} catch (\Throwable $e) {
+    // Keep static fallback links.
+}
 ?>
 <footer class="site-footer">
     <div class="container footer-main">
@@ -45,10 +75,11 @@ $publicLogoUrl = $publicLogoPath !== '' ? plpi_asset_url($publicLogoPath) . '?v=
 
         <div class="footer-column">
             <h4>Artikel Edukatif</h4>
-            <a href="<?= site_url('artikel/cara-menulis-artikel-ilmiah-yang-baik') ?>">Cara Menulis Artikel Ilmiah</a>
-            <a href="<?= site_url('artikel/memahami-struktur-imrad-dalam-artikel-ilmiah') ?>">Struktur IMRAD</a>
-            <a href="<?= site_url('artikel/tips-memilih-jurnal-yang-tepat') ?>">Tips Memilih Jurnal</a>
-            <a href="<?= site_url('artikel/etika-publikasi-ilmiah-yang-perlu-dipahami-penulis') ?>">Etika Publikasi</a>
+            <?php foreach (array_slice($footerArticles, 0, 5) as $article): ?>
+                <?php if (($article['slug'] ?? '') !== '' && ($article['title'] ?? '') !== ''): ?>
+                    <a href="<?= site_url('artikel/' . (string) $article['slug']) ?>"><?= esc((string) $article['title']) ?></a>
+                <?php endif; ?>
+            <?php endforeach; ?>
         </div>
 
         <div class="footer-column footer-contact">
@@ -56,17 +87,22 @@ $publicLogoUrl = $publicLogoPath !== '' ? plpi_asset_url($publicLogoPath) . '?v=
 
             <div class="contact-item">
                 <span>📍</span>
-                <p>Unit layanan publikasi ilmiah dan pengelolaan jurnal.</p>
+                <p>UPT Publikasi dan Penerbitan Universitas San Pedro</p>
             </div>
 
             <div class="contact-item">
                 <span>✉️</span>
-                <p>admin@plpi.test</p>
+                <p><a href="mailto:info@plpi.unisap.ac.id">info@plpi.unisap.ac.id</a></p>
+            </div>
+
+            <div class="contact-item">
+                <span>WA</span>
+                <p><a href="https://wa.me/6282213331314" target="_blank" rel="noopener noreferrer">0822-1333-1314</a></p>
             </div>
 
             <div class="contact-item">
                 <span>🕘</span>
-                <p>Senin–Jumat, 08.00–16.00 WITA</p>
+                <p>Senin-Jumat, 08.00-17.00 WITA</p>
             </div>
         </div>
     </div>
