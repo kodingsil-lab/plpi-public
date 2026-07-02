@@ -40,13 +40,41 @@ need_command() {
     command -v "$1" >/dev/null 2>&1 || fail "Command '$1' tidak tersedia di hosting."
 }
 
-ask_db_password() {
+require_db_password() {
     if [ -z "$DB_PASS" ]; then
-        printf 'Password database %s: ' "$DB_USER"
-        stty -echo
-        read -r DB_PASS
-        stty echo
-        printf '\n'
+        fail "Password database belum tersedia. Isi di $APP_DIR/.env atau jalankan sekali dengan PLPI_DB_PASS=\"password\"."
+    fi
+}
+
+env_value() {
+    local key="$1"
+    local file="$APP_DIR/.env"
+
+    [ -f "$file" ] || return 0
+
+    awk -F '=' -v key="$key" '
+        $1 ~ "^[[:space:]]*" key "[[:space:]]*$" {
+            value = $2
+            for (i = 3; i <= NF; i++) {
+                value = value "=" $i
+            }
+            sub(/^[[:space:]]*/, "", value)
+            sub(/[[:space:]]*$/, "", value)
+            sub(/^'\''/, "", value)
+            sub(/'\''$/, "", value)
+            print value
+            exit
+        }
+    ' "$file"
+}
+
+preserve_existing_secrets() {
+    if [ -z "$DB_PASS" ]; then
+        DB_PASS="$(env_value "database.default.password")"
+    fi
+
+    if [ -z "$SMTP_PASS" ]; then
+        SMTP_PASS="$(env_value "plpi.smtp.password")"
     fi
 }
 
@@ -126,9 +154,8 @@ install_dependencies() {
 
 write_env() {
     log "Tulis .env production"
-    if [ -z "$SMTP_PASS" ] && [ -f "$APP_DIR/.env" ]; then
-        SMTP_PASS="$(awk -F '=' '/^plpi\.smtp\.password[[:space:]]*=/{sub(/^[[:space:]]*/, "", $2); print $2; exit}' "$APP_DIR/.env" | sed "s/^'//;s/'$//")"
-    fi
+    preserve_existing_secrets
+    require_db_password
 
     cat > "$APP_DIR/.env" <<EOF
 CI_ENVIRONMENT = production
@@ -158,7 +185,7 @@ EOF
 }
 
 import_database() {
-    ask_db_password
+    require_db_password
 
     if [ ! -f "$APP_DIR/database/plpi_public_full.sql" ]; then
         fail "Dump database tidak ditemukan: $APP_DIR/database/plpi_public_full.sql"
@@ -222,9 +249,12 @@ case "$ACTION" in
     install)
         checkout_code
         install_dependencies
-        ask_db_password
         write_env
-        import_database
+        if [ -f "$APP_DIR/database/plpi_public_full.sql" ]; then
+            import_database
+        else
+            log "Lewati import database karena dump SQL tidak ada di repo/app"
+        fi
         publish_public_folder
         set_permissions
         clear_cache
@@ -233,7 +263,6 @@ case "$ACTION" in
     update)
         checkout_code
         install_dependencies
-        ask_db_password
         write_env
         publish_public_folder
         set_permissions
@@ -242,7 +271,6 @@ case "$ACTION" in
         ;;
     import-db)
         checkout_code
-        ask_db_password
         write_env
         import_database
         clear_cache

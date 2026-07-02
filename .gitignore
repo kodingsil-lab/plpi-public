@@ -46,6 +46,15 @@ $RECYCLE.BIN/
 Vagrantfile
 
 #-------------------------
+# Local Database Dumps
+#-------------------------
+# Database backup/import files must stay local. Production data should not be
+# committed or pushed to GitHub.
+/database/*.sql
+/database/*.sql.gz
+!/database/README.md
+
+#-------------------------
 # Temporary Files
 #-------------------------
 /writable/cache/*
