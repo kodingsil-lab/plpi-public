@@ -3649,17 +3649,17 @@ a {
 }
 
 .share-btn {
-    min-height: 38px;
+    width: 42px;
+    min-width: 42px;
+    height: 42px;
+    min-height: 42px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: 0 13px;
+    padding: 0;
     border: 1px solid transparent;
-    border-radius: 10px;
+    border-radius: 12px;
     color: var(--white);
-    font-size: 13px;
-    font-weight: 800;
     transition: 0.2s ease;
 }
 
@@ -3669,15 +3669,22 @@ a {
 }
 
 .share-icon {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
     display: inline-grid;
     place-items: center;
-    flex: 0 0 22px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.16);
+    flex: 0 0 20px;
     color: var(--white);
     line-height: 1;
+}
+
+.share-btn > span:not(.share-icon) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
 }
 
 .share-email {
@@ -3716,26 +3723,15 @@ a {
 }
 
 .share-btn {
-    min-width: 112px;
+    min-width: 42px;
     white-space: nowrap;
 }
 
-.share-icon svg {
-    width: 14px;
-    height: 14px;
+.share-icon iconify-icon {
     display: block;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
-
-.share-icon .whatsapp-icon {
-    width: 15px;
-    height: 15px;
-    fill: currentColor;
-    stroke: none;
+    color: #ffffff;
+    font-size: 20px;
+    line-height: 1;
 }
 
 @media (max-width: 760px) {
