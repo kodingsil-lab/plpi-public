@@ -398,15 +398,18 @@ class PublicPage extends BaseController
 
     public function authenticate()
     {
-        if ($this->isRateLimited('login', 5, 600)) {
+        $identity = trim((string) $this->request->getPost('identity'));
+        $password = (string) $this->request->getPost('password');
+        $loginBucket = 'login|' . strtolower($identity);
+
+        if ($this->isRateLimitedPeek($loginBucket, 10, 300)) {
             return redirect()->back()->withInput()->with('login_error', 'Terlalu banyak percobaan masuk. Coba lagi beberapa menit lagi.');
         }
 
-        $identity = trim((string) $this->request->getPost('identity'));
-        $password = (string) $this->request->getPost('password');
         $databaseUser = $this->findDatabaseUser($identity);
 
         if ($databaseUser && (int) ($databaseUser['is_active'] ?? 0) === 1 && password_verify($password, (string) $databaseUser['password'])) {
+            $this->clearRateLimit($loginBucket);
             session()->set([
                 'admin_logged_in' => true,
                 'admin_user_id'   => (int) $databaseUser['id'],
@@ -417,6 +420,8 @@ class PublicPage extends BaseController
 
             return redirect()->to(site_url('dashboard'));
         }
+
+        $this->hitRateLimit($loginBucket, 300);
 
         return redirect()
             ->back()
@@ -911,17 +916,12 @@ class PublicPage extends BaseController
 
     private function isRateLimited(string $bucket, int $maxAttempts, int $windowSeconds): bool
     {
-        try {
-            $cache = service('cache');
-        } catch (\Throwable $e) {
+        $cache = $this->rateLimitCache();
+        if (! $cache) {
             return false;
         }
 
-        if (! is_object($cache) || ! method_exists($cache, 'get') || ! method_exists($cache, 'save')) {
-            return false;
-        }
-
-        $key = 'plpi_rl_' . md5($bucket . '|' . (string) $this->request->getIPAddress());
+        $key = $this->rateLimitKey($bucket);
         $state = $cache->get($key);
         $now = time();
         if (! is_array($state) || (int) ($state['expires_at'] ?? 0) <= $now) {
@@ -932,5 +932,62 @@ class PublicPage extends BaseController
         $cache->save($key, $state, $windowSeconds);
 
         return $state['count'] > $maxAttempts;
+    }
+
+    private function isRateLimitedPeek(string $bucket, int $maxAttempts, int $windowSeconds): bool
+    {
+        $cache = $this->rateLimitCache();
+        if (! $cache) {
+            return false;
+        }
+
+        $state = $cache->get($this->rateLimitKey($bucket));
+        if (! is_array($state) || (int) ($state['expires_at'] ?? 0) <= time()) {
+            return false;
+        }
+
+        return (int) ($state['count'] ?? 0) >= $maxAttempts;
+    }
+
+    private function hitRateLimit(string $bucket, int $windowSeconds): void
+    {
+        $cache = $this->rateLimitCache();
+        if (! $cache) {
+            return;
+        }
+
+        $key = $this->rateLimitKey($bucket);
+        $state = $cache->get($key);
+        $now = time();
+        if (! is_array($state) || (int) ($state['expires_at'] ?? 0) <= $now) {
+            $state = ['count' => 0, 'expires_at' => $now + $windowSeconds];
+        }
+
+        $state['count'] = (int) ($state['count'] ?? 0) + 1;
+        $cache->save($key, $state, $windowSeconds);
+    }
+
+    private function clearRateLimit(string $bucket): void
+    {
+        $cache = $this->rateLimitCache();
+        if ($cache && method_exists($cache, 'delete')) {
+            $cache->delete($this->rateLimitKey($bucket));
+        }
+    }
+
+    private function rateLimitCache(): ?object
+    {
+        try {
+            $cache = service('cache');
+        } catch (\Throwable $e) {
+            return null;
+        }
+
+        return is_object($cache) && method_exists($cache, 'get') && method_exists($cache, 'save') ? $cache : null;
+    }
+
+    private function rateLimitKey(string $bucket): string
+    {
+        return 'plpi_rl_' . md5($bucket . '|' . (string) $this->request->getIPAddress());
     }
 }
