@@ -921,7 +921,6 @@ class PublicPage extends BaseController
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->loadHTML('<?xml encoding="utf-8" ?><div>' . $html . '</div>', LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
         $this->sanitizeDomNode($dom, $allowedAttrs);
-        $this->replaceYoutubeIframesInDom($dom);
         $clean = $dom->saveHTML() ?: '';
         libxml_clear_errors();
         libxml_use_internal_errors($previous);
@@ -1004,47 +1003,6 @@ class PublicPage extends BaseController
             }
 
             $this->sanitizeDomNode($child, $allowedAttrs);
-        }
-    }
-
-    private function replaceYoutubeIframesInDom(DOMDocument $dom): void
-    {
-        $iframes = [];
-        foreach ($dom->getElementsByTagName('iframe') as $iframe) {
-            if ($iframe instanceof DOMElement) {
-                $iframes[] = $iframe;
-            }
-        }
-
-        foreach ($iframes as $iframe) {
-            $src = trim($iframe->getAttribute('src'));
-            if ($this->normalizeYoutubeEmbedUrl($src) === '') {
-                continue;
-            }
-
-            $title = trim($iframe->getAttribute('title')) ?: 'Video YouTube';
-
-            $placeholder = $dom->createElement('div');
-            $placeholder->setAttribute('class', 'youtube-lite');
-            $placeholder->setAttribute('data-youtube-src', $src);
-            $placeholder->setAttribute('data-youtube-title', $title);
-
-            $button = $dom->createElement('button');
-            $button->setAttribute('type', 'button');
-            $button->setAttribute('class', 'youtube-lite-button');
-            $button->setAttribute('aria-label', 'Putar ' . $title);
-
-            $play = $dom->createElement('span');
-            $play->setAttribute('class', 'youtube-lite-play');
-
-            $label = $dom->createElement('span', 'Putar video');
-            $label->setAttribute('class', 'youtube-lite-label');
-
-            $button->appendChild($play);
-            $button->appendChild($label);
-            $placeholder->appendChild($button);
-
-            $iframe->parentNode?->replaceChild($placeholder, $iframe);
         }
     }
 
