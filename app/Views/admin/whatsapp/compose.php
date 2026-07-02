@@ -15,13 +15,6 @@ foreach (($templates ?? []) as $template) {
         <div class="admin-alert error"><?= esc((string) $databaseError) ?></div>
     <?php endif; ?>
 
-    <?php if (! empty($generatedUrl)): ?>
-        <div class="admin-alert success">
-            Link WhatsApp siap dibuka:
-            <a href="<?= esc((string) $generatedUrl, 'attr') ?>" target="_blank" rel="noopener noreferrer">Buka WhatsApp</a>
-        </div>
-    <?php endif; ?>
-
     <form class="whatsapp-compose" method="post" action="<?= site_url('dashboard/messages/whatsapp/send') ?>">
         <input type="hidden" name="message" id="messageInput" value="<?= esc((string) old('message'), 'attr') ?>">
 
@@ -156,15 +149,23 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function replaceTokens(text) {
-        const articleTitle = articleTitleInput && articleTitleInput.value.trim() ? articleTitleInput.value.trim() : '{judul_artikel}';
-        const journalName = journalNameInput && journalNameInput.value.trim() ? journalNameInput.value.trim() : '{nama_jurnal}';
-        const journalUrl = selectedJournalUrl() || '{link_jurnal}';
+        const articleTitle = articleTitleInput && articleTitleInput.value.trim() ? articleTitleInput.value.trim() : '';
+        const journalName = journalNameInput && journalNameInput.value.trim() ? journalNameInput.value.trim() : '';
+        const journalUrl = selectedJournalUrl();
+        const replacements = {
+            '{judul_artikel}': articleTitle,
+            '{nama_jurnal}': journalName,
+            '{jurnal}': journalName,
+            '{link_jurnal}': journalUrl
+        };
 
-        return text
-            .split('{judul_artikel}').join(articleTitle)
-            .split('{nama_jurnal}').join(journalName)
-            .split('{jurnal}').join(journalName)
-            .split('{link_jurnal}').join(journalUrl);
+        Object.keys(replacements).forEach(function (token) {
+            if (replacements[token]) {
+                text = text.split(token).join(replacements[token]);
+            }
+        });
+
+        return text;
     }
 
     function renderPreview() {

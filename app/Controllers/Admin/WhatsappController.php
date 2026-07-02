@@ -54,7 +54,6 @@ class WhatsappController extends BaseController
             'recentMessages' => $recentMessages,
             'journals'       => $journals,
             'databaseError'  => $databaseError,
-            'generatedUrl'   => session('generated_whatsapp_url'),
         ]);
     }
 
@@ -96,10 +95,7 @@ class WhatsappController extends BaseController
             'sent_by'        => (string) session('admin_email'),
         ]);
 
-        return redirect()
-            ->to(site_url('dashboard/messages/whatsapp/send'))
-            ->with('success', 'Link WhatsApp berhasil dibuat.')
-            ->with('generated_whatsapp_url', $waUrl);
+        return redirect()->to($waUrl);
     }
 
     public function composeEmail()
