@@ -277,10 +277,7 @@
                         <h3><?= esc($journal['name']) ?></h3>
                         <p><?= esc($journal['issn']) ?></p>
                         <div class="journal-action-row">
-                            <a href="<?= esc($journal['url']) ?>">Lihat Jurnal</a>
-                            <?php if (! empty($journal['recruitment_url']) && $journal['recruitment_url'] !== '#'): ?>
-                                <a href="<?= esc($journal['recruitment_url']) ?>">Daftar Editor/Reviewer</a>
-                            <?php endif; ?>
+                            <a href="<?= esc($journal['url']) ?>" target="_blank" rel="noopener noreferrer">Lihat Jurnal</a>
                         </div>
                     </div>
                 </div>
