@@ -8,10 +8,6 @@ $shareTitle = $article['title'];
 $emailSubject = rawurlencode($shareTitle);
 $emailBody = rawurlencode($shareTitle . "\n\n" . $shareUrl);
 $whatsappText = rawurlencode($shareTitle . "\n" . $shareUrl);
-$plainContent = trim(strip_tags((string) ($article['content_html'] ?? '')));
-$paragraphs = array_filter(array_map('trim', (array) ($article['content'] ?? [])));
-$hasArticleContent = $plainContent !== ''
-    || ($paragraphs !== [] && implode(' ', $paragraphs) !== 'Artikel belum memiliki isi.');
 ?>
 
 <section class="article-hero-new">
@@ -95,11 +91,6 @@ $hasArticleContent = $plainContent !== ''
                     <?php endforeach; ?>
                 <?php endif; ?>
 
-                <?php if ($hasArticleContent): ?>
-                    <blockquote id="penutup">
-                        Artikel ilmiah yang baik tidak hanya benar secara struktur, tetapi juga jelas, etis, mudah dipahami, dan relevan dengan pembaca sasaran.
-                    </blockquote>
-                <?php endif; ?>
             </div>
 
             <div class="article-share">
