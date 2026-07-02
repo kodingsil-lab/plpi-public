@@ -90,7 +90,7 @@
                         <button type="button" id="addAuthorBtn">Tambah</button>
                     </div>
                     <div id="authorList" class="loa-builder-list"></div>
-                    <textarea class="is-hidden" name="authors_text" id="authorsText" required><?= esc((string) old('authors_text')) ?></textarea>
+                    <textarea class="is-hidden" name="authors_text" id="authorsText"><?= esc((string) old('authors_text')) ?></textarea>
                 </div>
             </div>
 
@@ -347,6 +347,9 @@
         affSingleInput.addEventListener('input', syncAffiliations);
 
         form.addEventListener('submit', (event) => {
+            syncAuthors();
+            syncAffiliations();
+
             if (!validateEmail()) {
                 event.preventDefault();
                 emailInput.reportValidity();
@@ -358,8 +361,6 @@
                 nameInput.focus();
                 return;
             }
-            syncAuthors();
-            syncAffiliations();
         });
 
         parseInitialAuthors();
