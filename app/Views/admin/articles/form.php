@@ -88,8 +88,8 @@ if ($publishedValue === null && ! empty($row['published_at'])) {
         </div>
 
         <div class="form-actions">
-            <a class="admin-btn secondary" href="<?= site_url('dashboard/artikel-edukatif') ?>"><iconify-icon icon="mdi:arrow-left"></iconify-icon>Kembali</a>
-            <button class="admin-btn primary" type="submit"><iconify-icon icon="mdi:content-save-outline"></iconify-icon>Simpan</button>
+            <a class="admin-btn secondary" href="<?= site_url('dashboard/artikel-edukatif') ?>">Kembali</a>
+            <button class="admin-btn primary" type="submit">Simpan</button>
         </div>
     </form>
 </section>

@@ -42,8 +42,8 @@ foreach (($rows ?? []) as $index => $row) {
                     <input type="search" name="q" value="<?= esc((string) ($search ?? ''), 'attr') ?>" placeholder="Invoice / artikel / penulis / jurnal">
                 </label>
                 <div class="filter-actions">
-                    <button class="admin-btn primary" type="submit"><iconify-icon icon="mdi:filter"></iconify-icon>Terapkan</button>
-                    <a class="admin-btn secondary" href="<?= site_url('dashboard/invoice-jurnal') ?>"><iconify-icon icon="mdi:refresh"></iconify-icon>Reset</a>
+                    <button class="admin-btn primary" type="submit">Terapkan</button>
+                    <a class="admin-btn secondary" href="<?= site_url('dashboard/invoice-jurnal') ?>">Reset</a>
                 </div>
             </form>
         </div>
@@ -53,7 +53,7 @@ foreach (($rows ?? []) as $index => $row) {
 <section class="admin-panel mt-panel">
     <div class="panel-toolbar">
         <div class="panel-actions">
-            <button class="admin-btn primary" type="button" data-open-modal="invoiceCreateModal"><iconify-icon icon="mdi:receipt-text-plus-outline"></iconify-icon>Tambah</button>
+            <button class="admin-btn primary" type="button" data-open-modal="invoiceCreateModal">Tambah</button>
         </div>
     </div>
 
@@ -153,8 +153,8 @@ foreach (($rows ?? []) as $index => $row) {
             </div>
 
             <div class="form-actions">
-                <button class="admin-btn secondary" type="button" data-close-modal><iconify-icon icon="mdi:close"></iconify-icon>Batal</button>
-                <button class="admin-btn primary" type="submit"><iconify-icon icon="mdi:content-save-outline"></iconify-icon>Simpan</button>
+                <button class="admin-btn secondary" type="button" data-close-modal>Batal</button>
+                <button class="admin-btn primary" type="submit">Simpan</button>
             </div>
         </form>
     </section>

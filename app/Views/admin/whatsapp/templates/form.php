@@ -44,8 +44,8 @@
         </div>
 
         <div class="form-actions">
-            <a class="admin-btn secondary" href="<?= site_url('dashboard/messages/templates') ?>"><iconify-icon icon="mdi:arrow-left"></iconify-icon>Kembali</a>
-            <button class="admin-btn primary" type="submit"><iconify-icon icon="mdi:content-save-outline"></iconify-icon>Simpan</button>
+            <a class="admin-btn secondary" href="<?= site_url('dashboard/messages/templates') ?>">Kembali</a>
+            <button class="admin-btn primary" type="submit">Simpan</button>
         </div>
     </form>
 </section>

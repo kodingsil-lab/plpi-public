@@ -35,7 +35,6 @@ if (! function_exists('admin_table')) {
                             <form class="bulk-delete-form" method="post" action="<?= esc((string) ($bulk['action'] ?? '#'), 'attr') ?>" data-bulk-form data-confirm="<?= esc((string) ($bulk['confirm'] ?? 'Lanjutkan aksi massal?'), 'attr') ?>">
                                 <div data-bulk-inputs></div>
                                 <button class="admin-btn danger bulk-action-btn" type="submit" data-bulk-submit disabled>
-                                    <iconify-icon icon="mdi:trash-can-outline"></iconify-icon>
                                     <span data-bulk-label>Pilih data</span>
                                 </button>
                             </form>
@@ -57,7 +56,6 @@ if (! function_exists('admin_table')) {
                             <form class="bulk-delete-form" method="post" action="<?= esc((string) ($bulk['action'] ?? '#'), 'attr') ?>" data-bulk-form data-confirm="<?= esc((string) ($bulk['confirm'] ?? 'Lanjutkan aksi massal?'), 'attr') ?>">
                                 <div data-bulk-inputs></div>
                                 <button class="admin-btn danger bulk-action-btn" type="submit" data-bulk-submit disabled>
-                                    <iconify-icon icon="mdi:trash-can-outline"></iconify-icon>
                                     <span data-bulk-label>Pilih data</span>
                                 </button>
                             </form>

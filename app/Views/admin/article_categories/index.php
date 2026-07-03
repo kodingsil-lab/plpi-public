@@ -50,9 +50,9 @@ foreach (($rows ?? []) as $index => $row) {
             </div>
             <div class="form-actions">
                 <?php if ($isEdit): ?>
-                    <a class="admin-btn secondary" href="<?= site_url('dashboard/artikel-edukatif/kategori') ?>"><iconify-icon icon="mdi:close"></iconify-icon>Batal Edit</a>
+                    <a class="admin-btn secondary" href="<?= site_url('dashboard/artikel-edukatif/kategori') ?>">Batal Edit</a>
                 <?php endif; ?>
-                <button class="admin-btn primary" type="submit"><iconify-icon icon="mdi:content-save-outline"></iconify-icon>Simpan</button>
+                <button class="admin-btn primary" type="submit">Simpan</button>
             </div>
         </div>
     </form>
@@ -67,8 +67,8 @@ foreach (($rows ?? []) as $index => $row) {
                     <input type="search" name="q" value="<?= esc((string) ($search ?? ''), 'attr') ?>" placeholder="Nama / slug / deskripsi">
                 </label>
                 <div class="filter-actions">
-                    <button class="admin-btn primary" type="submit"><iconify-icon icon="mdi:filter"></iconify-icon>Terapkan</button>
-                    <a class="admin-btn secondary" href="<?= site_url('dashboard/artikel-edukatif/kategori') ?>"><iconify-icon icon="mdi:refresh"></iconify-icon>Reset</a>
+                    <button class="admin-btn primary" type="submit">Terapkan</button>
+                    <a class="admin-btn secondary" href="<?= site_url('dashboard/artikel-edukatif/kategori') ?>">Reset</a>
                 </div>
             </form>
         </div>

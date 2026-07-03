@@ -118,8 +118,8 @@ $signaturePreviewUrl = $isEdit && ! empty($row['default_signature_path']) ? site
         </div>
 
         <div class="form-actions">
-            <a class="admin-btn secondary" href="<?= site_url('dashboard/journals') ?>"><iconify-icon icon="mdi:arrow-left"></iconify-icon>Kembali</a>
-            <button class="admin-btn primary" type="submit"><iconify-icon icon="mdi:content-save-outline"></iconify-icon>Simpan</button>
+            <a class="admin-btn secondary" href="<?= site_url('dashboard/journals') ?>">Kembali</a>
+            <button class="admin-btn primary" type="submit">Simpan</button>
         </div>
     </form>
 </section>

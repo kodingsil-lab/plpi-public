@@ -63,8 +63,8 @@ $statusMeta = static function (array $row): array {
                 <h2>Permohonan LoA Terbaru</h2>
             </div>
             <div class="panel-actions">
-                <a class="admin-btn primary" href="<?= site_url('dashboard/loa-requests') ?>"><iconify-icon icon="mdi:folder-edit-outline"></iconify-icon>Kelola LoA</a>
-                <a class="admin-btn secondary" href="<?= site_url('dashboard/loa-letters') ?>"><iconify-icon icon="mdi:file-check-outline"></iconify-icon>Lihat LoA Terbit</a>
+                <a class="admin-btn primary" href="<?= site_url('dashboard/loa-requests') ?>">Kelola LoA</a>
+                <a class="admin-btn secondary" href="<?= site_url('dashboard/loa-letters') ?>">Lihat LoA Terbit</a>
             </div>
         </div>
 

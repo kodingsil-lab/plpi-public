@@ -30,7 +30,7 @@ foreach (($templates ?? []) as $template) {
         <div class="whatsapp-compose-card">
             <div class="whatsapp-compose-head">
                 <h3><iconify-icon icon="mdi:email-send-outline"></iconify-icon>Data Email</h3>
-                <a class="admin-btn secondary" href="<?= site_url('dashboard/messages/templates') ?>"><iconify-icon icon="mdi:pencil-box-outline"></iconify-icon>Template</a>
+                <a class="admin-btn secondary" href="<?= site_url('dashboard/messages/templates') ?>">Template</a>
             </div>
 
             <div class="whatsapp-compose-body">
@@ -99,8 +99,8 @@ foreach (($templates ?? []) as $template) {
             </div>
 
             <div class="whatsapp-preview-actions">
-                <button class="admin-btn secondary" type="button" id="refreshPreviewBtn"><iconify-icon icon="mdi:refresh"></iconify-icon>Refresh Preview</button>
-                <button class="admin-btn primary" type="submit" <?= empty($mailReady) ? 'disabled' : '' ?>><iconify-icon icon="mdi:email-send-outline"></iconify-icon>Kirim Email</button>
+                <button class="admin-btn secondary" type="button" id="refreshPreviewBtn">Refresh Preview</button>
+                <button class="admin-btn primary" type="submit" <?= empty($mailReady) ? 'disabled' : '' ?>>Kirim Email</button>
             </div>
         </div>
     </form>
@@ -119,7 +119,11 @@ foreach (($templates ?? []) as $template) {
             <div class="table-row">
                 <span><?= esc((string) ($message['recipient_email'] ?? '-')) ?></span>
                 <span><?= esc((string) ($message['subject'] ?? '-')) ?></span>
-                <span><span class="status-pill <?= ($message['status'] ?? '') === 'sent' ? 'done' : 'danger' ?>"><?= esc((string) ($message['status'] ?? '-')) ?></span></span>
+                <?php
+                    $messageStatus = (string) ($message['status'] ?? '');
+                    $messageStatusLabels = ['sent' => 'Terkirim', 'failed' => 'Gagal', 'pending' => 'Menunggu', 'queued' => 'Antrean'];
+                ?>
+                <span><span class="status-pill <?= $messageStatus === 'sent' ? 'done' : 'danger' ?>"><?= esc($messageStatusLabels[$messageStatus] ?? ucwords(str_replace('_', ' ', $messageStatus ?: '-'))) ?></span></span>
                 <span><?= esc((string) ($message['created_at'] ?? '-')) ?></span>
             </div>
         <?php endforeach; ?>

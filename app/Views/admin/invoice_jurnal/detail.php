@@ -8,9 +8,9 @@
             <span class="status-pill <?= esc(invoice_status_class($status), 'attr') ?>"><?= esc($status) ?></span>
         </div>
         <div class="row-actions">
-            <a class="admin-btn secondary" href="<?= site_url('dashboard/invoice-jurnal') ?>"><iconify-icon icon="mdi:arrow-left"></iconify-icon>Kembali</a>
-            <a class="admin-btn secondary" href="<?= site_url('dashboard/invoice-jurnal/' . (int) $row['id'] . '/print') ?>" target="_blank" rel="noopener noreferrer"><iconify-icon icon="mdi:printer-outline"></iconify-icon>Cetak</a>
-            <a class="admin-btn primary" href="<?= site_url('dashboard/invoice-jurnal/' . (int) $row['id'] . '/edit') ?>"><iconify-icon icon="mdi:pencil-outline"></iconify-icon>Edit</a>
+            <a class="admin-btn secondary" href="<?= site_url('dashboard/invoice-jurnal') ?>">Kembali</a>
+            <a class="admin-btn secondary" href="<?= site_url('dashboard/invoice-jurnal/' . (int) $row['id'] . '/print') ?>" target="_blank" rel="noopener noreferrer">Cetak</a>
+            <a class="admin-btn primary" href="<?= site_url('dashboard/invoice-jurnal/' . (int) $row['id'] . '/edit') ?>">Edit</a>
         </div>
     </div>
 

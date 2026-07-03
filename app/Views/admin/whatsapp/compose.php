@@ -21,7 +21,7 @@ foreach (($templates ?? []) as $template) {
         <div class="whatsapp-compose-card">
             <div class="whatsapp-compose-head">
                 <h3><iconify-icon icon="mdi:whatsapp"></iconify-icon>Data Pesan</h3>
-                <a class="admin-btn secondary" href="<?= site_url('dashboard/messages/templates') ?>"><iconify-icon icon="mdi:pencil-box-outline"></iconify-icon>Template</a>
+                <a class="admin-btn secondary" href="<?= site_url('dashboard/messages/templates') ?>">Template</a>
             </div>
 
             <div class="whatsapp-compose-body">
@@ -92,8 +92,8 @@ foreach (($templates ?? []) as $template) {
             </div>
 
             <div class="whatsapp-preview-actions">
-                <button class="admin-btn secondary" type="button" id="refreshPreviewBtn"><iconify-icon icon="mdi:refresh"></iconify-icon>Refresh Preview</button>
-                <button class="admin-btn primary" type="submit"><iconify-icon icon="mdi:whatsapp"></iconify-icon>Kirim</button>
+                <button class="admin-btn secondary" type="button" id="refreshPreviewBtn">Refresh Preview</button>
+                <button class="admin-btn primary" type="submit">Kirim</button>
             </div>
         </div>
     </form>

@@ -55,8 +55,8 @@ $faviconUrl = ! empty($row['favicon_path']) ? plpi_asset_url((string) $row['favi
         </div>
 
         <div class="form-actions">
-            <a class="admin-btn secondary" href="<?= site_url('dashboard') ?>"><iconify-icon icon="mdi:arrow-left"></iconify-icon>Kembali</a>
-            <button class="admin-btn primary" type="submit"><iconify-icon icon="mdi:content-save-outline"></iconify-icon>Simpan</button>
+            <a class="admin-btn secondary" href="<?= site_url('dashboard') ?>">Kembali</a>
+            <button class="admin-btn primary" type="submit">Simpan</button>
         </div>
     </form>
 </section>

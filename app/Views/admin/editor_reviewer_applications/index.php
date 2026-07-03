@@ -34,6 +34,12 @@ foreach (($rows ?? []) as $index => $row) {
     $email = trim((string) ($row['email'] ?? ''));
     $phone = trim((string) ($row['phone'] ?? ''));
     $status = trim((string) ($row['status'] ?? 'baru'));
+    $statusLabels = [
+        'baru' => 'Baru',
+        'diproses' => 'Diproses',
+        'diterima' => 'Diterima',
+        'ditolak' => 'Ditolak',
+    ];
     $tableRows[] = [
         '_bulk_id'  => (string) ($row['id'] ?? ''),
         'no'        => esc((string) (($startNumber ?? 1) + $index)),
@@ -44,7 +50,7 @@ foreach (($rows ?? []) as $index => $row) {
             . ($phone !== '' ? '<br><small><a href="https://wa.me/' . esc(preg_replace('/\D+/', '', $phone) ?: $phone, 'attr') . '" target="_blank" rel="noopener">' . esc($phone) . '</a></small>' : ''),
         'profiles'  => $profileLinks !== [] ? '<div class="profile-pill-stack">' . implode('', $profileLinks) . '</div>' : '<span class="status-pill muted">Kosong</span>',
         'expertise' => esc((string) ($row['expertise'] ?? '-')),
-        'status'    => '<span class="status-pill ' . ($status === 'baru' ? 'info' : 'done') . '">' . esc(ucfirst($status)) . '</span>',
+        'status'    => '<span class="status-pill ' . ($status === 'baru' ? 'info' : 'done') . '">' . esc($statusLabels[$status] ?? ucwords(str_replace('_', ' ', $status))) . '</span>',
         'date'      => ! empty($row['created_at']) ? date('d-m-Y H:i', strtotime((string) $row['created_at'])) : '-',
         'actions'   => '<div class="row-actions">'
             . admin_action_form('delete', site_url('dashboard/rekrutmen-editor-reviewer/' . (int) $row['id'] . '/delete'), 'Hapus', 'Hapus data pendaftaran ini?')
@@ -81,7 +87,7 @@ foreach (($rows ?? []) as $index => $row) {
                         </td>
                         <td>
                             <a class="admin-btn secondary recruitment-open-btn" href="<?= esc($link['url'], 'attr') ?>" target="_blank" rel="noopener">
-                                <iconify-icon icon="mdi:open-in-new"></iconify-icon>Buka Form
+                                Buka Form
                             </a>
                         </td>
                     </tr>
@@ -137,9 +143,9 @@ foreach (($rows ?? []) as $index => $row) {
                     <input type="search" name="q" value="<?= esc((string) ($filters['q'] ?? ''), 'attr') ?>" placeholder="Kode / nama / email / institusi / bidang">
                 </label>
                 <div class="filter-actions">
-                    <button class="admin-btn primary" type="submit"><iconify-icon icon="mdi:filter"></iconify-icon>Terapkan</button>
-                    <a class="admin-btn secondary" href="<?= site_url('dashboard/rekrutmen-editor-reviewer') ?>"><iconify-icon icon="mdi:refresh"></iconify-icon>Reset</a>
-                    <a class="admin-btn secondary" href="<?= site_url('dashboard/rekrutmen-editor-reviewer/export/excel') ?>"><iconify-icon icon="mdi:file-excel-outline"></iconify-icon>Export Excel</a>
+                    <button class="admin-btn primary" type="submit">Terapkan</button>
+                    <a class="admin-btn secondary" href="<?= site_url('dashboard/rekrutmen-editor-reviewer') ?>">Reset</a>
+                    <a class="admin-btn secondary" href="<?= site_url('dashboard/rekrutmen-editor-reviewer/export/excel') ?>">Export Excel</a>
                 </div>
             </form>
         </div>

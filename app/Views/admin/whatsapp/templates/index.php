@@ -9,7 +9,7 @@ foreach (($rows ?? []) as $index => $row) {
         'no'       => esc((string) (($startNumber ?? 1) + $index)),
         'name'     => '<strong>' . esc((string) ($row['name'] ?? '-')) . '</strong>',
         'code'     => esc((string) ($row['code'] ?? '-')),
-        'type'     => '<span class="status-pill ' . (($row['type'] ?? 'whatsapp') === 'email' ? 'info' : 'done') . '">' . esc(ucfirst((string) ($row['type'] ?? 'whatsapp'))) . '</span>',
+        'type'     => '<span class="status-pill ' . (($row['type'] ?? 'whatsapp') === 'email' ? 'info' : 'done') . '">' . esc(((string) ($row['type'] ?? 'whatsapp')) === 'email' ? 'Email' : 'WhatsApp') . '</span>',
         'status'   => '<span class="status-pill ' . ($isActive ? 'done' : 'muted') . '">' . ($isActive ? 'Aktif' : 'Nonaktif') . '</span>',
         'actions'  => '<div class="row-actions">'
             . '<a class="icon-btn edit" href="' . site_url('dashboard/messages/templates/' . (int) $row['id'] . '/edit') . '" title="Edit" aria-label="Edit"><iconify-icon icon="mdi:pencil-outline"></iconify-icon></a>'
@@ -28,8 +28,8 @@ foreach (($rows ?? []) as $index => $row) {
                     <input type="search" name="q" value="<?= esc((string) ($search ?? ''), 'attr') ?>" placeholder="Nama / kode template">
                 </label>
                 <div class="filter-actions">
-                    <button class="admin-btn primary" type="submit"><iconify-icon icon="mdi:filter"></iconify-icon>Terapkan</button>
-                    <a class="admin-btn secondary" href="<?= site_url('dashboard/messages/templates') ?>"><iconify-icon icon="mdi:refresh"></iconify-icon>Reset</a>
+                    <button class="admin-btn primary" type="submit">Terapkan</button>
+                    <a class="admin-btn secondary" href="<?= site_url('dashboard/messages/templates') ?>">Reset</a>
                 </div>
             </form>
         </div>

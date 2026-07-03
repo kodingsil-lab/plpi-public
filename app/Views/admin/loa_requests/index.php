@@ -59,8 +59,8 @@ foreach (($rows ?? []) as $index => $row) {
                     <input type="search" name="q" value="<?= esc((string) ($filters['q'] ?? ''), 'attr') ?>" placeholder="Nomor LoA / judul">
                 </label>
                 <div class="filter-actions">
-                    <button class="admin-btn primary" type="submit"><iconify-icon icon="mdi:filter"></iconify-icon>Terapkan</button>
-                    <a class="admin-btn secondary" href="<?= site_url('dashboard/loa-requests') ?>"><iconify-icon icon="mdi:refresh"></iconify-icon>Reset</a>
+                    <button class="admin-btn primary" type="submit">Terapkan</button>
+                    <a class="admin-btn secondary" href="<?= site_url('dashboard/loa-requests') ?>">Reset</a>
                 </div>
             </form>
         </div>

@@ -70,13 +70,13 @@
         </div>
 
         <div class="form-actions">
-            <a class="admin-btn secondary" href="<?= site_url('dashboard/loa-letters') ?>"><iconify-icon icon="mdi:arrow-left"></iconify-icon>Kembali</a>
+            <a class="admin-btn secondary" href="<?= site_url('dashboard/loa-letters') ?>">Kembali</a>
             <?php if (! empty($row['public_token'])): ?>
-                <a class="admin-btn secondary" href="<?= site_url('loa/v/' . (string) $row['public_token'] . '/preview') ?>" target="_blank" rel="noopener"><iconify-icon icon="mdi:file-eye-outline"></iconify-icon>Preview PDF</a>
-                <a class="admin-btn secondary" href="<?= site_url('loa/v/' . (string) $row['public_token'] . '/download') ?>"><iconify-icon icon="mdi:download-outline"></iconify-icon>Unduh PDF</a>
+                <a class="admin-btn secondary" href="<?= site_url('loa/v/' . (string) $row['public_token'] . '/preview') ?>" target="_blank" rel="noopener">Preview PDF</a>
+                <a class="admin-btn secondary" href="<?= site_url('loa/v/' . (string) $row['public_token'] . '/download') ?>">Unduh PDF</a>
             <?php endif; ?>
-            <button class="admin-btn secondary" type="submit" formaction="<?= site_url('dashboard/loa-letters/' . (int) $row['id'] . '/regenerate') ?>"><iconify-icon icon="mdi:file-refresh-outline"></iconify-icon>Regenerate PDF</button>
-            <button class="admin-btn primary" type="submit"><iconify-icon icon="mdi:content-save-outline"></iconify-icon>Simpan</button>
+            <button class="admin-btn secondary" type="submit" formaction="<?= site_url('dashboard/loa-letters/' . (int) $row['id'] . '/regenerate') ?>">Regenerate PDF</button>
+            <button class="admin-btn primary" type="submit">Simpan</button>
         </div>
     </form>
 </section>

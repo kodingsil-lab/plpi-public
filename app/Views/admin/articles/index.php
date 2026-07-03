@@ -46,8 +46,8 @@ foreach (($rows ?? []) as $index => $row) {
                     <input type="search" name="q" value="<?= esc((string) ($search ?? ''), 'attr') ?>" placeholder="Judul / slug / kategori">
                 </label>
                 <div class="filter-actions">
-                    <button class="admin-btn primary" type="submit"><iconify-icon icon="mdi:filter"></iconify-icon>Terapkan</button>
-                    <a class="admin-btn secondary" href="<?= site_url('dashboard/artikel-edukatif') ?>"><iconify-icon icon="mdi:refresh"></iconify-icon>Reset</a>
+                    <button class="admin-btn primary" type="submit">Terapkan</button>
+                    <a class="admin-btn secondary" href="<?= site_url('dashboard/artikel-edukatif') ?>">Reset</a>
                 </div>
             </form>
         </div>
