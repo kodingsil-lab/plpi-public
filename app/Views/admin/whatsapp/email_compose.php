@@ -106,31 +106,6 @@ foreach (($templates ?? []) as $template) {
     </form>
 </section>
 
-<?php if (! empty($recentMessages)): ?>
-<section class="admin-panel mt-panel">
-    <div class="admin-table compact-history">
-        <div class="table-row table-head">
-            <span>Penerima</span>
-            <span>Subjek</span>
-            <span>Status</span>
-            <span>Waktu</span>
-        </div>
-        <?php foreach ($recentMessages as $message): ?>
-            <div class="table-row">
-                <span><?= esc((string) ($message['recipient_email'] ?? '-')) ?></span>
-                <span><?= esc((string) ($message['subject'] ?? '-')) ?></span>
-                <?php
-                    $messageStatus = (string) ($message['status'] ?? '');
-                    $messageStatusLabels = ['sent' => 'Terkirim', 'failed' => 'Gagal', 'pending' => 'Menunggu', 'queued' => 'Antrean'];
-                ?>
-                <span><span class="status-pill <?= $messageStatus === 'sent' ? 'done' : 'danger' ?>"><?= esc($messageStatusLabels[$messageStatus] ?? ucwords(str_replace('_', ' ', $messageStatus ?: '-'))) ?></span></span>
-                <span><?= esc((string) ($message['created_at'] ?? '-')) ?></span>
-            </div>
-        <?php endforeach; ?>
-    </div>
-</section>
-<?php endif; ?>
-
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const templates = <?= json_encode($templatePayload, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) ?>;

@@ -98,5 +98,6 @@
     </main>
 
     <script src="<?= base_url('plpi/js/public.js') ?>"></script>
+    <?= plpi_statcounter_code($appSettings) ?>
 </body>
 </html>

@@ -59,5 +59,6 @@
             }, true);
         })();
     </script>
+    <?= plpi_statcounter_code($appSettings) ?>
 </body>
 </html>

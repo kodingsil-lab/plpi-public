@@ -8,6 +8,7 @@ $currentTimezone = (string) ($row['app_timezone'] ?? 'Asia/Jakarta');
 $appLogoPath = (string) ($row['header_logo_path'] ?? $row['login_logo_path'] ?? $row['public_logo_path'] ?? '');
 $appLogoUrl = $appLogoPath !== '' ? plpi_asset_url($appLogoPath) : '';
 $faviconUrl = ! empty($row['favicon_path']) ? plpi_asset_url((string) $row['favicon_path']) : '';
+$statcounterCode = (string) old('statcounter_code', $row['statcounter_code'] ?? '');
 ?>
 <section class="admin-panel user-form-panel">
     <?php if (! empty($databaseError)): ?>
@@ -52,6 +53,15 @@ $faviconUrl = ! empty($row['favicon_path']) ? plpi_asset_url((string) $row['favi
                     </select>
                 </label>
             </div>
+        </div>
+
+        <div class="form-section statcounter-section">
+            <h3><iconify-icon icon="mdi:chart-line"></iconify-icon>Statcounter</h3>
+            <label class="statcounter-field">
+                <span>Kode Statcounter</span>
+                <textarea name="statcounter_code" rows="8" placeholder="Paste kode Statcounter di sini"><?= esc($statcounterCode) ?></textarea>
+                <small>Kode ini akan dipasang otomatis sebelum tag penutup body pada halaman publik.</small>
+            </label>
         </div>
 
         <div class="form-actions">

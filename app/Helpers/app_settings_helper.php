@@ -111,6 +111,15 @@ if (! function_exists('plpi_favicon_tags')) {
     }
 }
 
+if (! function_exists('plpi_statcounter_code')) {
+    function plpi_statcounter_code(?array $settings = null): string
+    {
+        $settings ??= plpi_app_settings();
+
+        return trim((string) ($settings['statcounter_code'] ?? ''));
+    }
+}
+
 if (! function_exists('plpi_timezone_options')) {
     function plpi_timezone_options(): array
     {

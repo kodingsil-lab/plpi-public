@@ -100,7 +100,6 @@ class WhatsappController extends BaseController
         }
 
         $templates = [];
-        $recentMessages = [];
         $journals = [];
         $databaseError = null;
         $mailReady = false;
@@ -111,9 +110,6 @@ class WhatsappController extends BaseController
                 ->where('is_active', 1)
                 ->orderBy('name', 'ASC')
                 ->findAll();
-            $recentMessages = (new EmailMessageModel())
-                ->orderBy('id', 'DESC')
-                ->findAll(10);
             $journals = (new JournalModel())->orderBy('name', 'ASC')->findAll();
             $mailReady = $this->mailSettingsReady();
         } else {
@@ -122,7 +118,6 @@ class WhatsappController extends BaseController
 
         return view('admin/whatsapp/email_compose', $this->viewData('Kirim Pesan Email', 'message_email') + [
             'templates'      => $templates,
-            'recentMessages' => $recentMessages,
             'journals'       => $journals,
             'databaseError'  => $databaseError,
             'mailReady'      => $mailReady,
@@ -436,13 +431,13 @@ class WhatsappController extends BaseController
     {
         $database = (new AppSettingModel())->first() ?: [];
         $env = [
-            'smtp_host'       => trim((string) env('plpi.smtp.host', '')),
-            'smtp_user'       => trim((string) env('plpi.smtp.user', '')),
-            'smtp_pass'       => (string) env('plpi.smtp.password', ''),
-            'smtp_port'       => (int) env('plpi.smtp.port', 0),
-            'smtp_crypto'     => trim((string) env('plpi.smtp.crypto', '')),
-            'mail_from_email' => trim((string) env('plpi.mail.fromEmail', '')),
-            'mail_from_name'  => trim((string) env('plpi.mail.fromName', '')),
+            'smtp_host'       => trim((string) (env('plpi.smtp.host') ?: env('MAIL_HOST', ''))),
+            'smtp_user'       => trim((string) (env('plpi.smtp.user') ?: env('MAIL_USERNAME', ''))),
+            'smtp_pass'       => (string) (env('plpi.smtp.password') ?: env('MAIL_PASSWORD', '')),
+            'smtp_port'       => (int) (env('plpi.smtp.port') ?: env('MAIL_PORT', 0)),
+            'smtp_crypto'     => trim((string) (env('plpi.smtp.crypto') ?: env('MAIL_ENCRYPTION', ''))),
+            'mail_from_email' => trim((string) (env('plpi.mail.fromEmail') ?: env('MAIL_FROM_ADDRESS', ''))),
+            'mail_from_name'  => trim((string) (env('plpi.mail.fromName') ?: env('MAIL_FROM_NAME', ''))),
         ];
 
         $hasEnvSmtp = $env['smtp_host'] !== '' || $env['smtp_user'] !== '' || $env['smtp_pass'] !== '';

@@ -55,7 +55,8 @@ class ApplicationController extends BaseController
         }
 
         $payload = [
-            'app_timezone'     => $timezone,
+            'app_timezone'      => $timezone,
+            'statcounter_code'  => trim((string) $this->request->getPost('statcounter_code')),
         ];
 
         $fileMap = [

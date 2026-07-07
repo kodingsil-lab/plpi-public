@@ -16,6 +16,7 @@ class AppSettingModel extends Model
         'public_logo_path',
         'favicon_path',
         'app_timezone',
+        'statcounter_code',
         'smtp_host',
         'smtp_port',
         'smtp_user',
