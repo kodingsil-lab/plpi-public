@@ -7,21 +7,16 @@
         $assetVersion = rawurlencode((string) ($appSettings['updated_at'] ?? time()));
         $adminLogoPath = (string) ($appSettings['header_logo_path'] ?? '');
         $adminLogoUrl = $adminLogoPath !== '' ? plpi_asset_url($adminLogoPath) . '?v=' . $assetVersion : '';
-        $faviconPath = (string) ($appSettings['favicon_path'] ?? '');
-        $faviconUrl = $faviconPath !== '' ? plpi_asset_url($faviconPath) . '?v=' . $assetVersion : '';
     ?>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= esc($title ?? 'Dashboard Admin') ?> | PLPI</title>
-    <?php if ($faviconUrl !== ''): ?>
-        <link rel="icon" href="<?= esc($faviconUrl, 'attr') ?>">
-        <link rel="shortcut icon" href="<?= esc($faviconUrl, 'attr') ?>">
-    <?php endif; ?>
+    <?= plpi_favicon_tags($appSettings) ?>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="<?= base_url('plpi/css/admin.css?v=2026070301') ?>">
+    <link rel="stylesheet" href="<?= base_url('plpi/css/admin.css?v=2026070601') ?>">
     <script defer src="https://code.iconify.design/iconify-icon/3.0.0/iconify-icon.min.js"></script>
 </head>
 <body>
@@ -34,6 +29,7 @@
             'loa_letters' => ['icon' => 'mdi:file-check-outline', 'tone' => 'green'],
             'loa_notifications' => ['icon' => 'mdi:bell-outline', 'tone' => 'amber'],
             'journals' => ['icon' => 'mdi:book-open-page-variant-outline', 'tone' => 'blue'],
+            'journal_templates' => ['icon' => 'mdi:file-word-outline', 'tone' => 'cyan'],
             'publishers' => ['icon' => 'mdi:office-building-outline', 'tone' => 'teal'],
             'articles' => ['icon' => 'mdi:newspaper-variant-outline', 'tone' => 'amber'],
             'article_categories' => ['icon' => 'mdi:shape-outline', 'tone' => 'purple'],
@@ -84,13 +80,14 @@
                     </div>
                 </div>
 
-                <div class="nav-group <?= in_array($activeMenu, ['journals', 'publishers'], true) ? 'is-open' : '' ?>">
+                <div class="nav-group <?= in_array($activeMenu, ['journals', 'journal_templates', 'publishers'], true) ? 'is-open' : '' ?>">
                     <button type="button" class="nav-parent">
                         <span class="nav-icon tone-cyan"><iconify-icon icon="mdi:book-open-page-variant-outline"></iconify-icon></span>
                         <span>Manajemen Jurnal</span>
                     </button>
                     <div class="nav-submenu">
                         <a href="<?= site_url('dashboard/journals') ?>" class="<?= $activeMenu === 'journals' ? 'active' : '' ?>"><iconify-icon icon="mdi:database-outline"></iconify-icon>Data Jurnal</a>
+                        <a href="<?= site_url('dashboard/journal-templates') ?>" class="<?= $activeMenu === 'journal_templates' ? 'active' : '' ?>"><iconify-icon icon="mdi:file-word-outline"></iconify-icon>Template Artikel</a>
                         <a href="<?= site_url('dashboard/publishers') ?>" class="<?= $activeMenu === 'publishers' ? 'active' : '' ?>"><iconify-icon icon="mdi:office-building-outline"></iconify-icon>Publisher</a>
                     </div>
                 </div>

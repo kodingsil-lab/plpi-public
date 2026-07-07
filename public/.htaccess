@@ -26,6 +26,11 @@ Options -Indexes
 	RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
 	RewriteRule ^ http://%1%{REQUEST_URI} [R=301,L]
 
+	# Always serve browser favicons from the application setting.
+	RewriteRule ^favicon\.ico$ index.php/favicon.ico [L,NC,QSA]
+	RewriteRule ^apple-touch-icon\.png$ index.php/apple-touch-icon.png [L,NC,QSA]
+	RewriteRule ^apple-touch-icon-precomposed\.png$ index.php/apple-touch-icon-precomposed.png [L,NC,QSA]
+
 	# Checks to see if the user is attempting to access a valid file,
 	# such as an image or css document, if this isn't true it sends the
 	# request to the front controller, index.php

@@ -243,7 +243,7 @@ class JournalController extends BaseController
             $suffix++;
         }
 
-        return [
+        $payload = [
             'publisher_id'           => (int) $data['publisher_id'],
             'name'                   => trim((string) $data['name']),
             'code'                   => strtoupper(trim((string) $data['code'])),
@@ -261,6 +261,16 @@ class JournalController extends BaseController
             'pdf_sig_height_px'      => (int) ($data['pdf_sig_height_px'] ?: 85),
             'pdf_sig_scale_percent'  => (int) ($data['pdf_sig_scale_percent'] ?: 100),
         ];
+
+        if ($ignoreId === null && $this->articleTemplateFieldReady()) {
+            $payload['article_template_slug'] = $this->uniqueArticleTemplateSlug(
+                (string) ($payload['code'] ?? ''),
+                (string) ($payload['name'] ?? ''),
+                null
+            );
+        }
+
+        return $payload;
     }
 
     private function slugExists(JournalModel $model, string $slug, ?int $ignoreId): bool
@@ -271,6 +281,43 @@ class JournalController extends BaseController
         }
 
         return (bool) $builder->first();
+    }
+
+    private function uniqueArticleTemplateSlug(string $code, string $name, ?int $ignoreId): string
+    {
+        $source = trim($code) !== '' ? trim($code) : trim($name);
+        $base = url_title($source, '-', true) ?: 'jurnal';
+        $base = implode('-', array_map(static fn ($part) => ucfirst($part), explode('-', $base)));
+        $slug = $base;
+        $suffix = 2;
+
+        while ($this->articleTemplateSlugExists($slug, $ignoreId)) {
+            $slug = $base . '-' . $suffix;
+            $suffix++;
+        }
+
+        return $slug;
+    }
+
+    private function articleTemplateSlugExists(string $slug, ?int $ignoreId): bool
+    {
+        $model = new JournalModel();
+        $builder = $model->where('article_template_slug', $slug);
+        if ($ignoreId !== null) {
+            $builder->where('id !=', $ignoreId);
+        }
+
+        return (bool) $builder->first();
+    }
+
+    private function articleTemplateFieldReady(): bool
+    {
+        try {
+            $db = \Config\Database::connect();
+            return $db->tableExists('journals') && $db->fieldExists('article_template_slug', 'journals');
+        } catch (\Throwable $e) {
+            return false;
+        }
     }
 
     private function viewData(string $title): array

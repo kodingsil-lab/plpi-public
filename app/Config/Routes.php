@@ -3,11 +3,17 @@
 use CodeIgniter\Router\RouteCollection;
 
 /** @var RouteCollection $routes */
+$routes->get('favicon.ico', 'AppAssetController::favicon');
+$routes->get('apple-touch-icon.png', 'AppAssetController::favicon');
+$routes->get('apple-touch-icon-precomposed.png', 'AppAssetController::favicon');
 $routes->get('/', 'PublicPage::index');
 $routes->get('journal-logo/(:num)', 'PublicPage::journalLogo/$1');
 $routes->get('article-cover/(:num)', 'PublicPage::articleCover/$1');
 $routes->get('artikel', 'PublicPage::artikel');
 $routes->get('artikel/(:segment)', 'PublicPage::detailArtikel/$1');
+$routes->get('TemplateArtikel', 'Public\ArticleTemplateController::index');
+$routes->get('TemplateArtikel-(:segment)', 'Public\ArticleTemplateController::download/$1');
+$routes->get('TemplateArtikel-(:segment)/download', 'Public\ArticleTemplateController::download/$1');
 $routes->get('rekrutmen-editor-reviewer/jurnal/(:segment)', 'PublicPage::rekrutmenEditorReviewer/$1');
 $routes->post('rekrutmen-editor-reviewer/jurnal/(:segment)', 'PublicPage::storeRekrutmenEditorReviewer/$1');
 
@@ -39,6 +45,10 @@ $routes->get('dashboard/journals/(:num)/edit', 'Admin\JournalController::edit/$1
 $routes->post('dashboard/journals/(:num)/update', 'Admin\JournalController::update/$1');
 $routes->post('dashboard/journals/(:num)/delete', 'Admin\JournalController::destroy/$1');
 $routes->post('dashboard/journals/bulk-delete', 'Admin\JournalController::bulkDelete');
+$routes->get('dashboard/journal-templates', 'Admin\JournalTemplateController::index');
+$routes->post('dashboard/journal-templates/(:num)/upload', 'Admin\JournalTemplateController::upload/$1');
+$routes->get('dashboard/journal-templates/(:num)/download', 'Admin\JournalTemplateController::download/$1');
+$routes->post('dashboard/journal-templates/(:num)/regenerate-link', 'Admin\JournalTemplateController::regenerateLink/$1');
 $routes->get('dashboard/invoice-jurnal', 'Admin\InvoiceJurnalController::index');
 $routes->get('dashboard/invoice-jurnal/create', 'Admin\InvoiceJurnalController::create');
 $routes->post('dashboard/invoice-jurnal', 'Admin\InvoiceJurnalController::store');

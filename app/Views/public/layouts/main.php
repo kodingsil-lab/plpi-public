@@ -4,17 +4,11 @@
     <?php
         helper('app_settings');
         $appSettings = plpi_app_settings();
-        $assetVersion = rawurlencode((string) ($appSettings['updated_at'] ?? time()));
-        $faviconPath = (string) ($appSettings['favicon_path'] ?? '');
-        $faviconUrl = $faviconPath !== '' ? plpi_asset_url($faviconPath) . '?v=' . $assetVersion : '';
     ?>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= esc($title ?? 'Pusat Layanan Publikasi Ilmiah') ?></title>
-    <?php if ($faviconUrl !== ''): ?>
-        <link rel="icon" href="<?= esc($faviconUrl, 'attr') ?>">
-        <link rel="shortcut icon" href="<?= esc($faviconUrl, 'attr') ?>">
-    <?php endif; ?>
+    <?= plpi_favicon_tags($appSettings) ?>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,7 +16,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Public CSS -->
-    <link rel="stylesheet" href="<?= base_url('plpi/css/public.css?v=2026070209') ?>">
+    <link rel="stylesheet" href="<?= base_url('plpi/css/public.css?v=2026070601') ?>">
     <script defer src="https://code.iconify.design/iconify-icon/3.0.0/iconify-icon.min.js"></script>
 </head>
 <body>

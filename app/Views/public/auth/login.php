@@ -7,16 +7,11 @@
         $assetVersion = rawurlencode((string) ($appSettings['updated_at'] ?? time()));
         $loginLogoPath = (string) ($appSettings['login_logo_path'] ?? $appSettings['public_logo_path'] ?? '');
         $loginLogoUrl = $loginLogoPath !== '' ? plpi_asset_url($loginLogoPath) . '?v=' . $assetVersion : '';
-        $faviconPath = (string) ($appSettings['favicon_path'] ?? '');
-        $faviconUrl = $faviconPath !== '' ? plpi_asset_url($faviconPath) . '?v=' . $assetVersion : '';
     ?>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= esc($title ?? 'Masuk Dashboard') ?> | PLPI</title>
-    <?php if ($faviconUrl !== ''): ?>
-        <link rel="icon" href="<?= esc($faviconUrl, 'attr') ?>">
-        <link rel="shortcut icon" href="<?= esc($faviconUrl, 'attr') ?>">
-    <?php endif; ?>
+    <?= plpi_favicon_tags($appSettings) ?>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

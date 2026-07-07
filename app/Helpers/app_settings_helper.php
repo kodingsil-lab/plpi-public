@@ -47,6 +47,70 @@ if (! function_exists('plpi_asset_url')) {
     }
 }
 
+if (! function_exists('plpi_favicon_path')) {
+    function plpi_favicon_path(?array $settings = null): string
+    {
+        $settings ??= plpi_app_settings();
+
+        return trim((string) ($settings['favicon_path'] ?? ''));
+    }
+}
+
+if (! function_exists('plpi_favicon_mime')) {
+    function plpi_favicon_mime(string $path): string
+    {
+        $extension = strtolower(pathinfo(parse_url($path, PHP_URL_PATH) ?: $path, PATHINFO_EXTENSION));
+
+        return match ($extension) {
+            'ico' => 'image/x-icon',
+            'png' => 'image/png',
+            'svg' => 'image/svg+xml',
+            'webp' => 'image/webp',
+            default => '',
+        };
+    }
+}
+
+if (! function_exists('plpi_favicon_url')) {
+    function plpi_favicon_url(?array $settings = null): string
+    {
+        $settings ??= plpi_app_settings();
+        $path = plpi_favicon_path($settings);
+
+        if ($path === '') {
+            return '';
+        }
+
+        $version = rawurlencode((string) ($settings['updated_at'] ?? time()));
+
+        return plpi_asset_url($path) . '?v=' . $version;
+    }
+}
+
+if (! function_exists('plpi_favicon_tags')) {
+    function plpi_favicon_tags(?array $settings = null): string
+    {
+        $settings ??= plpi_app_settings();
+        $url = plpi_favicon_url($settings);
+        $path = plpi_favicon_path($settings);
+
+        if ($url === '') {
+            return '';
+        }
+
+        $href = esc($url, 'attr');
+        $mime = plpi_favicon_mime($path);
+        $type = $mime !== '' ? ' type="' . esc($mime, 'attr') . '"' : '';
+
+        return implode("\n", [
+            '<link rel="icon" href="' . $href . '"' . $type . '>',
+            '<link rel="shortcut icon" href="' . $href . '"' . $type . '>',
+            '<link rel="apple-touch-icon" href="' . $href . '">',
+            '<meta name="msapplication-TileImage" content="' . $href . '">',
+        ]);
+    }
+}
+
 if (! function_exists('plpi_timezone_options')) {
     function plpi_timezone_options(): array
     {

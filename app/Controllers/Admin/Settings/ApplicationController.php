@@ -72,6 +72,10 @@ class ApplicationController extends BaseController
             foreach ($fieldNames as $fieldName) {
                 $payload[$fieldName] = $storedPath;
             }
+
+            if ($inputName === 'favicon') {
+                $this->syncBrowserFavicon($storedPath);
+            }
         }
 
         $model = new AppSettingModel();
@@ -110,6 +114,24 @@ class ApplicationController extends BaseController
         $file->move($targetDir, $newName, true);
 
         return 'uploads/app-settings/' . $newName;
+    }
+
+    private function syncBrowserFavicon(string $storedPath): void
+    {
+        $source = realpath(FCPATH . ltrim($storedPath, '/\\'));
+        $uploadRoot = realpath(FCPATH . 'uploads');
+
+        if (
+            $source === false
+            || $uploadRoot === false
+            || ! str_starts_with($source, $uploadRoot . DIRECTORY_SEPARATOR)
+            || ! is_file($source)
+            || ! is_readable($source)
+        ) {
+            return;
+        }
+
+        @copy($source, FCPATH . 'favicon.ico');
     }
 
     private function tableReady(): bool

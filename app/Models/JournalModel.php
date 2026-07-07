@@ -15,6 +15,7 @@ class JournalModel extends Model
         'name',
         'code',
         'slug',
+        'article_template_slug',
         'issn',
         'e_issn',
         'p_issn',
