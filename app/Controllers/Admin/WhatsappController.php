@@ -158,6 +158,7 @@ class WhatsappController extends BaseController
             'SMTPPass'    => (string) ($settings['smtp_pass'] ?? ''),
             'SMTPPort'    => (int) ($settings['smtp_port'] ?? 587),
             'SMTPCrypto'  => (string) ($settings['smtp_crypto'] ?? 'tls'),
+            'userAgent'   => 'PLPI Mailer',
             'mailType'    => 'html',
             'charset'     => 'UTF-8',
             'wordWrap'    => true,

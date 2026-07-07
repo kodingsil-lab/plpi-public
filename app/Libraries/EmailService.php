@@ -39,6 +39,7 @@ class EmailService
                     'SMTPPass'    => $settings['smtp_pass'],
                     'SMTPPort'    => $settings['smtp_port'],
                     'SMTPCrypto'  => $settings['smtp_crypto'],
+                    'userAgent'   => 'PLPI Mailer',
                     'mailType'    => 'html',
                     'charset'     => 'UTF-8',
                     'wordWrap'    => true,
@@ -52,7 +53,7 @@ class EmailService
                 $settings['mail_from_name']
             );
             $this->email->setTo($recipientEmail);
-            $this->email->setSubject('Notifikasi Letter of Acceptance (LoA) - ' . ($letter['loa_number'] ?? 'LoA'));
+            $this->email->setSubject('Letter of Acceptance Artikel Anda Telah Terbit');
             $this->email->setMailType('html');
             $this->email->setMessage(view('email/loa_approved_notification', [
                 'letter' => $letter,
