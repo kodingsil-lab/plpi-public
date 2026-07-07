@@ -11,6 +11,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= esc($title ?? 'Masuk Dashboard') ?> | PLPI</title>
+    <?= plpi_social_meta_tags($appSettings, ($title ?? 'Masuk Dashboard') . ' | PLPI', 'Masuk ke dashboard PLPI untuk mengelola layanan publikasi ilmiah.', current_url()) ?>
     <?= plpi_favicon_tags($appSettings) ?>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">

@@ -27,7 +27,7 @@ class CreateWhatsappManagementTables extends Migration
                 [
                     'name'       => 'Notifikasi LoA Terbit',
                     'code'       => 'loa_terbit',
-                    'message'    => "Yth. Bapak/Ibu Penulis,\n\nLetter of Acceptance (LoA) untuk artikel berikut telah diterbitkan:\n\nJudul:\n*{judul_artikel}*\n\nHormat kami,\n*Tim Editor*\n*{nama_jurnal}*",
+                    'message'    => "Yth. Bapak/Ibu Penulis,\n\nLetter of Acceptance (LoA) untuk artikel berikut telah diterbitkan:\n\nJudul:\n*{judul_artikel}*\n\nLetter of Acceptance (LoA) juga telah kami kirimkan ke email yang terdaftar pada sistem. Silakan mengecek pesan masuk atau folder spam apabila email belum terlihat.\n\nHormat kami,\n*Tim Editor*\n*{nama_jurnal}*",
                     'is_active'  => 1,
                     'created_at' => $now,
                     'updated_at' => $now,

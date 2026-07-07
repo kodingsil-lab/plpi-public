@@ -120,6 +120,51 @@ if (! function_exists('plpi_statcounter_code')) {
     }
 }
 
+if (! function_exists('plpi_social_image_url')) {
+    function plpi_social_image_url(?array $settings = null): string
+    {
+        $settings ??= plpi_app_settings();
+
+        foreach (['public_logo_path', 'header_logo_path', 'login_logo_path', 'favicon_path'] as $key) {
+            $path = trim((string) ($settings[$key] ?? ''));
+            if ($path !== '') {
+                return plpi_asset_url($path);
+            }
+        }
+
+        return base_url('plpi/images/hero1.png');
+    }
+}
+
+if (! function_exists('plpi_social_meta_tags')) {
+    function plpi_social_meta_tags(?array $settings = null, ?string $title = null, ?string $description = null, ?string $url = null): string
+    {
+        $settings ??= plpi_app_settings();
+        $title = trim((string) ($title ?: 'PLPI - Pusat Layanan Publikasi Ilmiah'));
+        $description = trim((string) ($description ?: 'Layanan pengajuan LoA, informasi jurnal, pendampingan publikasi, dan edukasi literasi ilmiah Universitas San Pedro.'));
+        $url = trim((string) ($url ?: current_url()));
+        $imageUrl = plpi_social_image_url($settings);
+
+        return implode("\n", [
+            '<meta name="description" content="' . esc($description, 'attr') . '">',
+            '<meta property="og:type" content="website">',
+            '<meta property="og:site_name" content="PLPI">',
+            '<meta property="og:title" content="' . esc($title, 'attr') . '">',
+            '<meta property="og:description" content="' . esc($description, 'attr') . '">',
+            '<meta property="og:url" content="' . esc($url, 'attr') . '">',
+            '<meta property="og:image" content="' . esc($imageUrl, 'attr') . '">',
+            '<meta property="og:image:secure_url" content="' . esc($imageUrl, 'attr') . '">',
+            '<meta property="og:image:type" content="image/png">',
+            '<meta property="og:image:width" content="512">',
+            '<meta property="og:image:height" content="512">',
+            '<meta name="twitter:card" content="summary_large_image">',
+            '<meta name="twitter:title" content="' . esc($title, 'attr') . '">',
+            '<meta name="twitter:description" content="' . esc($description, 'attr') . '">',
+            '<meta name="twitter:image" content="' . esc($imageUrl, 'attr') . '">',
+        ]);
+    }
+}
+
 if (! function_exists('plpi_timezone_options')) {
     function plpi_timezone_options(): array
     {

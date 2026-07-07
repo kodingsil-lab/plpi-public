@@ -72,6 +72,8 @@ foreach (($rows ?? []) as $index => $row) {
         'Verifikasi LoA dapat dilakukan melalui tautan berikut:',
         $verifyUrl,
         '',
+        'Letter of Acceptance (LoA) juga telah kami kirimkan ke email yang terdaftar pada sistem. Silakan mengecek pesan masuk atau folder spam apabila email belum terlihat.',
+        '',
         'Hormat kami,',
         '*Tim Editor*',
         '*' . (string) ($row['journal_name'] ?? '-') . '*',

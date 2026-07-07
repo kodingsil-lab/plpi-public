@@ -15,7 +15,7 @@ foreach (($templates ?? []) as $template) {
         <div class="admin-alert error"><?= esc((string) $databaseError) ?></div>
     <?php endif; ?>
 
-    <form class="whatsapp-compose" method="post" action="<?= site_url('dashboard/messages/whatsapp/send') ?>">
+                <form class="whatsapp-compose" method="post" action="<?= site_url('dashboard/messages/whatsapp/send') ?>" target="_blank">
         <input type="hidden" name="message" id="messageInput" value="<?= esc((string) old('message'), 'attr') ?>">
 
         <div class="whatsapp-compose-card">

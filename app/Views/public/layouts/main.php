@@ -8,6 +8,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= esc($title ?? 'Pusat Layanan Publikasi Ilmiah') ?></title>
+    <?= plpi_social_meta_tags($appSettings, $title ?? null, $metaDescription ?? null, current_url()) ?>
     <?= plpi_favicon_tags($appSettings) ?>
 
     <!-- Google Fonts -->
