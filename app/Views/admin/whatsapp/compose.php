@@ -58,10 +58,12 @@ foreach (($templates ?? []) as $template) {
                             <?php
                                 $journalName = (string) ($journal['name'] ?? '');
                                 $journalUrl = (string) ($journal['website_url'] ?? '');
+                                $commitmentUrl = (string) ($journal['commitment_statement_url'] ?? '');
                             ?>
                             <option
                                 value="<?= esc($journalName, 'attr') ?>"
                                 data-url="<?= esc($journalUrl, 'attr') ?>"
+                                data-commitment-url="<?= esc($commitmentUrl, 'attr') ?>"
                                 <?= old('nama_jurnal') === $journalName ? 'selected' : '' ?>
                             >
                                 <?= esc($journalName) ?>
@@ -74,9 +76,13 @@ foreach (($templates ?? []) as $template) {
                     <span>Placeholder Template</span>
                     <div>
                         <button type="button" data-token="{judul}">{judul}</button>
+                        <button type="button" data-token="{judul_artikel}">{judul_artikel}</button>
                         <button type="button" data-token="{nama_jurnal}">{nama_jurnal}</button>
                         <button type="button" data-token="{jurnal}">{jurnal}</button>
                         <button type="button" data-token="{link_jurnal}">{link_jurnal}</button>
+                        <button type="button" data-token="{link jurnal}">{link jurnal}</button>
+                        <button type="button" data-token="{pernyataan_komitmen_penulis}">{pernyataan_komitmen_penulis}</button>
+                        <button type="button" data-token="{pernyataan komitmen penulis}">{pernyataan komitmen penulis}</button>
                     </div>
                 </div>
             </div>
@@ -127,15 +133,29 @@ document.addEventListener('DOMContentLoaded', function () {
         return journalNameInput.selectedOptions[0].dataset.url || '';
     }
 
+    function selectedCommitmentUrl() {
+        if (!journalNameInput || !journalNameInput.selectedOptions || !journalNameInput.selectedOptions.length) {
+            return '';
+        }
+
+        return journalNameInput.selectedOptions[0].dataset.commitmentUrl || '';
+    }
+
     function replaceTokens(text) {
         const articleTitle = articleTitleInput && articleTitleInput.value.trim() ? articleTitleInput.value.trim() : '';
         const journalName = journalNameInput && journalNameInput.value.trim() ? journalNameInput.value.trim() : '';
         const journalUrl = selectedJournalUrl();
+        const commitmentUrl = selectedCommitmentUrl();
         const replacements = {
             '{judul}': articleTitle,
+            '{judul_artikel}': articleTitle,
             '{nama_jurnal}': journalName,
             '{jurnal}': journalName,
-            '{link_jurnal}': journalUrl
+            '{link_jurnal}': journalUrl,
+            '{link jurnal}': journalUrl,
+            '{pernyataan_komitmen_penulis}': commitmentUrl,
+            '{pernyataan komitmen penulis}': commitmentUrl,
+            '{link_pernyataan_komitmen_penulis}': commitmentUrl
         };
 
         Object.keys(replacements).forEach(function (token) {

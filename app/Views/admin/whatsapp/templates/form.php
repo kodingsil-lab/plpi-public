@@ -38,7 +38,7 @@
                 <label class="span-2">
                     <span>Isi Pesan</span>
                     <textarea name="message" rows="14" data-editor="plain" required><?= esc((string) old('message', $row['message'] ?? '')) ?></textarea>
-                    <small>Placeholder: {nama_penerima}, {judul_artikel}, {nama_jurnal}, {tanggal}, {nama_admin}.</small>
+                    <small>Placeholder: {nama_penerima}, {judul_artikel}, {judul}, {nama_jurnal}, {jurnal}, {link_jurnal}, {link jurnal}, {pernyataan_komitmen_penulis}, {pernyataan komitmen penulis}, {tanggal}, {nama_admin}.</small>
                 </label>
             </div>
         </div>

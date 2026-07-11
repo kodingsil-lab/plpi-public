@@ -39,8 +39,17 @@ foreach (($templates ?? []) as $template) {
                     <select name="nama_jurnal" id="journalNameInput">
                         <option value="">Pilih jurnal</option>
                         <?php foreach (($journals ?? []) as $journal): ?>
-                            <?php $journalName = (string) ($journal['name'] ?? ''); ?>
-                            <option value="<?= esc($journalName, 'attr') ?>" <?= old('nama_jurnal') === $journalName ? 'selected' : '' ?>>
+                            <?php
+                                $journalName = (string) ($journal['name'] ?? '');
+                                $journalUrl = (string) ($journal['website_url'] ?? '');
+                                $commitmentUrl = (string) ($journal['commitment_statement_url'] ?? '');
+                            ?>
+                            <option
+                                value="<?= esc($journalName, 'attr') ?>"
+                                data-url="<?= esc($journalUrl, 'attr') ?>"
+                                data-commitment-url="<?= esc($commitmentUrl, 'attr') ?>"
+                                <?= old('nama_jurnal') === $journalName ? 'selected' : '' ?>
+                            >
                                 <?= esc($journalName) ?>
                             </option>
                         <?php endforeach; ?>
@@ -79,7 +88,13 @@ foreach (($templates ?? []) as $template) {
                     <div>
                         <button type="button" data-token="{nama_penerima}">{nama_penerima}</button>
                         <button type="button" data-token="{judul_artikel}">{judul_artikel}</button>
+                        <button type="button" data-token="{judul}">{judul}</button>
                         <button type="button" data-token="{nama_jurnal}">{nama_jurnal}</button>
+                        <button type="button" data-token="{jurnal}">{jurnal}</button>
+                        <button type="button" data-token="{link_jurnal}">{link_jurnal}</button>
+                        <button type="button" data-token="{link jurnal}">{link jurnal}</button>
+                        <button type="button" data-token="{pernyataan_komitmen_penulis}">{pernyataan_komitmen_penulis}</button>
+                        <button type="button" data-token="{pernyataan komitmen penulis}">{pernyataan komitmen penulis}</button>
                     </div>
                 </div>
             </div>
@@ -115,13 +130,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const previewSubject = document.getElementById('previewSubject');
     const previewMessage = document.getElementById('previewMessage');
     const refreshPreviewBtn = document.getElementById('refreshPreviewBtn');
-    const fields = {
-        '{nama_penerima}': document.getElementById('recipientNameInput'),
-        '{judul_artikel}': document.getElementById('articleTitleInput'),
-        '{nama_jurnal}': document.getElementById('journalNameInput'),
-        '{tanggal}': { value: new Date().toLocaleDateString('id-ID') },
-        '{nama_admin}': { value: <?= json_encode((string) ($adminName ?? 'Admin')) ?> }
-    };
+    const recipientNameInput = document.getElementById('recipientNameInput');
+    const articleTitleInput = document.getElementById('articleTitleInput');
+    const journalNameInput = document.getElementById('journalNameInput');
+    const fields = [recipientNameInput, articleTitleInput, journalNameInput];
     let activeSubject = '';
     let activeTemplate = '';
     if (!select || !subjectInput || !messageInput || !previewSubject || !previewMessage) return;
@@ -132,12 +144,47 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    function selectedJournalUrl() {
+        if (!journalNameInput || !journalNameInput.selectedOptions || !journalNameInput.selectedOptions.length) {
+            return '';
+        }
+
+        return journalNameInput.selectedOptions[0].dataset.url || '';
+    }
+
+    function selectedCommitmentUrl() {
+        if (!journalNameInput || !journalNameInput.selectedOptions || !journalNameInput.selectedOptions.length) {
+            return '';
+        }
+
+        return journalNameInput.selectedOptions[0].dataset.commitmentUrl || '';
+    }
+
     function replaceTokens(text) {
-        Object.keys(fields).forEach(function (token) {
-            const input = fields[token];
-            const value = input && String(input.value || '').trim() ? String(input.value).trim() : token;
-            text = text.split(token).join(value);
+        const articleTitle = articleTitleInput && articleTitleInput.value.trim() ? articleTitleInput.value.trim() : '';
+        const journalName = journalNameInput && journalNameInput.value.trim() ? journalNameInput.value.trim() : '';
+        const recipientName = recipientNameInput && recipientNameInput.value.trim() ? recipientNameInput.value.trim() : '';
+        const replacements = {
+            '{nama_penerima}': recipientName,
+            '{judul_artikel}': articleTitle,
+            '{judul}': articleTitle,
+            '{nama_jurnal}': journalName,
+            '{jurnal}': journalName,
+            '{link_jurnal}': selectedJournalUrl(),
+            '{link jurnal}': selectedJournalUrl(),
+            '{pernyataan_komitmen_penulis}': selectedCommitmentUrl(),
+            '{pernyataan komitmen penulis}': selectedCommitmentUrl(),
+            '{link_pernyataan_komitmen_penulis}': selectedCommitmentUrl(),
+            '{tanggal}': new Date().toLocaleDateString('id-ID'),
+            '{nama_admin}': <?= json_encode((string) ($adminName ?? 'Admin')) ?>
+        };
+
+        Object.keys(replacements).forEach(function (token) {
+            if (replacements[token]) {
+                text = text.split(token).join(replacements[token]);
+            }
         });
+
         return text;
     }
 
@@ -160,10 +207,10 @@ document.addEventListener('DOMContentLoaded', function () {
         renderPreview();
     });
 
-    Object.keys(fields).forEach(function (token) {
-        const input = fields[token];
+    fields.forEach(function (input) {
         if (input && input.addEventListener) {
             input.addEventListener('input', renderPreview);
+            input.addEventListener('change', renderPreview);
         }
     });
 

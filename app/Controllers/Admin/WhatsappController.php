@@ -34,7 +34,7 @@ class WhatsappController extends BaseController
                 $db = \Config\Database::connect();
                 if ($db->tableExists('journals')) {
                     $journals = (new JournalModel())
-                        ->select('name, website_url')
+                        ->select('name, website_url, commitment_statement_url')
                         ->orderBy('name', 'ASC')
                         ->findAll();
                 }
