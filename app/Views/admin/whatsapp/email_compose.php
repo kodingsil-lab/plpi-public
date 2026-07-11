@@ -86,10 +86,10 @@ foreach (($templates ?? []) as $template) {
                 <div class="placeholder-box">
                     <span>Placeholder Template</span>
                     <div>
-                        <button type="button" data-token="{judul}">{judul}</button>
-                        <button type="button" data-token="{jurnal}">{jurnal}</button>
-                        <button type="button" data-token="{link jurnal}">{link jurnal}</button>
-                        <button type="button" data-token="{pernyataan komitmen penulis}">{pernyataan komitmen penulis}</button>
+                        <span class="placeholder-token">{judul}</span>
+                        <span class="placeholder-token">{jurnal}</span>
+                        <span class="placeholder-token">{link jurnal}</span>
+                        <span class="placeholder-token">{pernyataan komitmen penulis}</span>
                     </div>
                 </div>
             </div>
@@ -207,19 +207,6 @@ document.addEventListener('DOMContentLoaded', function () {
             input.addEventListener('input', renderPreview);
             input.addEventListener('change', renderPreview);
         }
-    });
-
-    document.querySelectorAll('[data-token]').forEach(function (button) {
-        button.addEventListener('click', function () {
-            const token = button.getAttribute('data-token') || '';
-            previewMessage.focus();
-            const start = previewMessage.selectionStart || 0;
-            const end = previewMessage.selectionEnd || 0;
-            previewMessage.value = previewMessage.value.slice(0, start) + token + previewMessage.value.slice(end);
-            previewMessage.selectionStart = previewMessage.selectionEnd = start + token.length;
-            activeTemplate = previewMessage.value;
-            messageInput.value = previewMessage.value;
-        });
     });
 
     previewSubject.addEventListener('input', function () {
