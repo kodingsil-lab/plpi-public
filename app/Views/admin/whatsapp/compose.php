@@ -76,12 +76,8 @@ foreach (($templates ?? []) as $template) {
                     <span>Placeholder Template</span>
                     <div>
                         <button type="button" data-token="{judul}">{judul}</button>
-                        <button type="button" data-token="{judul_artikel}">{judul_artikel}</button>
-                        <button type="button" data-token="{nama_jurnal}">{nama_jurnal}</button>
                         <button type="button" data-token="{jurnal}">{jurnal}</button>
-                        <button type="button" data-token="{link_jurnal}">{link_jurnal}</button>
                         <button type="button" data-token="{link jurnal}">{link jurnal}</button>
-                        <button type="button" data-token="{pernyataan_komitmen_penulis}">{pernyataan_komitmen_penulis}</button>
                         <button type="button" data-token="{pernyataan komitmen penulis}">{pernyataan komitmen penulis}</button>
                     </div>
                 </div>
