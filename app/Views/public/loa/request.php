@@ -141,8 +141,6 @@
         const form = document.querySelector('.loa-public-form');
         if (!form) return;
 
-        const allowedEmailDomains = ['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com', 'live.com', 'icloud.com', 'aol.com', 'proton.me', 'protonmail.com', 'zoho.com', 'gmx.com', 'mail.com', 'yandex.com'];
-        const emailInput = document.getElementById('correspondingEmail');
         const roleSelect = document.getElementById('authorRole');
         const nameInput = document.getElementById('authorName');
         const addAuthorBtn = document.getElementById('addAuthorBtn');
@@ -160,14 +158,6 @@
 
         const authors = [];
         const affiliations = [];
-
-        function validateEmail() {
-            const value = emailInput.value.trim().toLowerCase();
-            const domain = value.includes('@') ? value.split('@').pop() : '';
-            const valid = !value || allowedEmailDomains.includes(domain);
-            emailInput.setCustomValidity(valid ? '' : 'Gunakan domain email umum yang diizinkan.');
-            return valid;
-        }
 
         function renumberAuthors() {
             let member = 1;
@@ -341,8 +331,6 @@
             renderAffiliations();
         });
 
-        emailInput.addEventListener('input', validateEmail);
-        emailInput.addEventListener('blur', validateEmail);
         affSameForAll.addEventListener('change', toggleAffMode);
         affSingleInput.addEventListener('input', syncAffiliations);
 
@@ -350,11 +338,6 @@
             syncAuthors();
             syncAffiliations();
 
-            if (!validateEmail()) {
-                event.preventDefault();
-                emailInput.reportValidity();
-                return;
-            }
             if (!authors.length) {
                 event.preventDefault();
                 alert('Tambahkan minimal satu penulis.');
