@@ -31,6 +31,10 @@ class LoaPdfService
                 $publisher = (new PublisherModel())->find((int) $journal['publisher_id']);
             }
         }
+        $loaNumberForPdf = $this->replaceJournalCode(
+            (string) ($letter['loa_number'] ?? '-'),
+            (string) ($journal['code'] ?? '')
+        );
 
         $authors = $this->decodeJson($letter['authors_json'] ?? null);
         $affiliations = $this->decodeJson($letter['affiliations_json'] ?? null);
@@ -53,7 +57,7 @@ class LoaPdfService
             'stampBase64' => $stampBase64,
             'sigBase64' => $sigBase64,
             'qrcodeBase64' => $qrcodeBase64,
-            'loaNumber' => (string) ($letter['loa_number'] ?? '-'),
+            'loaNumber' => $loaNumberForPdf,
         ]);
 
         $dompdf->loadHtml($html);
@@ -72,6 +76,25 @@ class LoaPdfService
         file_put_contents($absolutePath, $dompdf->output());
 
         return $relativePath;
+    }
+
+    private function replaceJournalCode(string $loaNumber, string $journalCode): string
+    {
+        $journalCode = strtoupper(trim($journalCode));
+        $journalCode = preg_replace('/[^A-Z0-9-]+/', '-', $journalCode) ?? '';
+        $journalCode = trim((preg_replace('/-+/', '-', $journalCode) ?? ''), '-');
+        if ($journalCode === '') {
+            return $loaNumber;
+        }
+
+        $parts = explode('/', trim($loaNumber));
+        if (count($parts) < 3 || strcasecmp((string) ($parts[1] ?? ''), 'LOA') !== 0) {
+            return $loaNumber;
+        }
+
+        $parts[2] = $journalCode;
+
+        return implode('/', $parts);
     }
 
     private function decodeJson($value): array
