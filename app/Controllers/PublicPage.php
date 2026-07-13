@@ -17,22 +17,6 @@ class PublicPage extends BaseController
 {
     protected $helpers = ['url', 'text'];
 
-    private const ALLOWED_EMAIL_DOMAINS = [
-        'gmail.com',
-        'yahoo.com',
-        'outlook.com',
-        'hotmail.com',
-        'live.com',
-        'icloud.com',
-        'aol.com',
-        'proton.me',
-        'protonmail.com',
-        'zoho.com',
-        'gmx.com',
-        'mail.com',
-        'yandex.com',
-    ];
-
     public function index()
     {
         $articles = $this->getArticles();
@@ -192,12 +176,6 @@ class PublicPage extends BaseController
 
         $validated = $this->validator->getValidated();
         $email = strtolower(trim((string) ($validated['corresponding_email'] ?? '')));
-        if (! $this->isAllowedPublicEmail($email)) {
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with('error', 'Email korespondensi hanya boleh menggunakan domain email umum yang diizinkan.');
-        }
 
         $journalId = (int) ($validated['journal_id'] ?? 0);
         $journal = null;
@@ -527,13 +505,6 @@ class PublicPage extends BaseController
         }
 
         return [null, null];
-    }
-
-    private function isAllowedPublicEmail(string $email): bool
-    {
-        $domain = strtolower(trim((string) substr(strrchr($email, '@') ?: '', 1)));
-
-        return $domain !== '' && in_array($domain, self::ALLOWED_EMAIL_DOMAINS, true);
     }
 
     private function lines(string $value): array
