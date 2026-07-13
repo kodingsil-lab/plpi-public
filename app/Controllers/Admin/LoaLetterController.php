@@ -120,12 +120,22 @@ class LoaLetterController extends BaseController
         }
 
         $data = $this->validator->getValidated();
+        $journalId = (int) $data['journal_id'];
+        if (! (new JournalModel())->find($journalId)) {
+            return redirect()->back()->withInput()->with('error', 'Jurnal yang dipilih tidak valid.');
+        }
+
+        $journalChanged = (int) ($current['journal_id'] ?? 0) !== $journalId;
+        $loaNumber = $journalChanged
+            ? $this->generateLoaNumber($journalId, (string) ($current['published_at'] ?? ''))
+            : (string) ($current['loa_number'] ?? '');
         $authors = $this->lines((string) $data['authors_text']);
         $affiliations = $this->lines((string) ($data['affiliations_text'] ?? ''));
         $status = (string) $data['status'];
 
         $model->update($id, [
-            'journal_id' => (int) $data['journal_id'],
+            'journal_id' => $journalId,
+            'loa_number' => $loaNumber,
             'title' => trim((string) $data['title']),
             'article_url' => trim((string) ($data['article_url'] ?? '')),
             'corresponding_email' => trim((string) $data['corresponding_email']),
@@ -146,9 +156,16 @@ class LoaLetterController extends BaseController
                 'pdf_path' => $pdfPath,
                 'updated_at' => date('Y-m-d H:i:s'),
             ]);
+            if ($journalChanged && (string) ($current['pdf_path'] ?? '') !== $pdfPath) {
+                $this->deletePdfFile((string) ($current['pdf_path'] ?? ''));
+            }
         }
 
-        return redirect()->to(site_url('dashboard/loa-letters'))->with('success', 'LoA berhasil diperbarui.');
+        $message = $journalChanged
+            ? 'Jurnal dan nomor LoA berhasil diperbarui menjadi ' . $loaNumber . '.'
+            : 'LoA berhasil diperbarui.';
+
+        return redirect()->to(site_url('dashboard/loa-letters'))->with('success', $message);
     }
 
     public function regenerate(int $id)
@@ -256,6 +273,74 @@ class LoaLetterController extends BaseController
         $value = trim($value);
 
         return $value === '' ? null : $value;
+    }
+
+    private function generateLoaNumber(int $journalId, string $issuedAt): string
+    {
+        $db = \Config\Database::connect();
+        $journal = $db->table('journals j')
+            ->select('j.code AS journal_code, p.code AS publisher_code')
+            ->join('publishers p', 'p.id = j.publisher_id', 'left')
+            ->where('j.id', $journalId)
+            ->get()
+            ->getRowArray();
+
+        if (! is_array($journal)) {
+            throw new \RuntimeException('Jurnal tidak ditemukan untuk membuat nomor LoA.');
+        }
+
+        $timestamp = strtotime($issuedAt);
+        if ($timestamp === false) {
+            $timestamp = time();
+        }
+
+        $journalCode = $this->normalizeCodeSegment((string) ($journal['journal_code'] ?? ''));
+        $publisherCode = $this->normalizeCodeSegment((string) ($journal['publisher_code'] ?? 'PLPI'));
+        $year = date('Y', $timestamp);
+        $monthRoman = $this->monthToRoman((int) date('n', $timestamp));
+
+        $rows = (new LoaLetterModel())
+            ->select('loa_number')
+            ->like('loa_number', '/LOA/' . $journalCode . '/')
+            ->like('loa_number', '/' . $year, 'before')
+            ->findAll();
+
+        $maxSequence = 0;
+        foreach ($rows as $row) {
+            $parts = explode('/', trim((string) ($row['loa_number'] ?? '')));
+            if (count($parts) < 6
+                || strcasecmp((string) ($parts[1] ?? ''), 'LOA') !== 0
+                || strcasecmp((string) ($parts[2] ?? ''), $journalCode) !== 0
+                || (string) ($parts[5] ?? '') !== $year
+                || ! ctype_digit((string) ($parts[0] ?? ''))) {
+                continue;
+            }
+
+            $maxSequence = max($maxSequence, (int) $parts[0]);
+        }
+
+        return sprintf(
+            '%03d/LOA/%s/%s/%s/%s',
+            $maxSequence + 1,
+            $journalCode,
+            $publisherCode,
+            $monthRoman,
+            $year
+        );
+    }
+
+    private function monthToRoman(int $month): string
+    {
+        return [1 => 'I', 2 => 'II', 3 => 'III', 4 => 'IV', 5 => 'V', 6 => 'VI', 7 => 'VII', 8 => 'VIII', 9 => 'IX', 10 => 'X', 11 => 'XI', 12 => 'XII'][$month] ?? 'I';
+    }
+
+    private function normalizeCodeSegment(string $raw): string
+    {
+        $value = strtoupper(trim($raw));
+        $value = preg_replace('/[^A-Z0-9-]+/', '-', $value) ?? '';
+        $value = trim((preg_replace('/-+/', '-', $value) ?? ''), '-');
+
+        return $value !== '' ? $value : 'NA';
     }
 
     private function deletePdfFile(string $path): void
