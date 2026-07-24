@@ -2792,6 +2792,35 @@ a {
     font-weight: 800;
 }
 
+.form-required-note {
+    margin: 0;
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.form-required-note span,
+.loa-form-grid label.is-required > span:first-child::after {
+    color: #dc2626;
+    font-weight: 900;
+}
+
+.loa-form-grid label.is-required > span:first-child::after {
+    content: " *";
+}
+
+.loa-form-grid label.is-optional > span:first-child::after {
+    content: " (Opsional)";
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 650;
+}
+
+.loa-form-grid label.is-required .field-tooltip,
+.loa-form-grid label.is-optional .field-tooltip {
+    order: 2;
+}
+
 .loa-form-grid .field-label {
     display: inline-flex;
     align-items: center;
