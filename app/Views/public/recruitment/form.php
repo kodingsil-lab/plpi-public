@@ -3,6 +3,14 @@
 <?php
 $journal = is_array($journal ?? null) ? $journal : [];
 $intro = trim((string) ($journal['recruitment_intro'] ?? ''));
+$journalLogoUrl = ! empty($journal['logo_path']) && ! empty($journal['id'])
+    ? site_url('journal-logo/' . (int) $journal['id'] . '?v=' . rawurlencode((string) ($journal['updated_at'] ?? '')))
+    : '';
+$journalIssn = array_values(array_filter([
+    trim((string) ($journal['e_issn'] ?? '')) !== '' ? 'E-ISSN: ' . trim((string) $journal['e_issn']) : '',
+    trim((string) ($journal['p_issn'] ?? '')) !== '' ? 'P-ISSN: ' . trim((string) $journal['p_issn']) : '',
+    trim((string) ($journal['issn'] ?? '')) !== '' ? 'ISSN: ' . trim((string) $journal['issn']) : '',
+]));
 ?>
 
 <section class="section loa-request-section">
@@ -21,11 +29,27 @@ $intro = trim((string) ($journal['recruitment_intro'] ?? ''));
 
         <form class="loa-public-form" method="post" action="<?= site_url('rekrutmen-editor-reviewer/jurnal/' . (string) ($journal['slug'] ?? '')) ?>">
             <div class="loa-form-panel">
-                <div class="loa-form-heading">
-                    <span>01</span>
-                    <div>
-                        <h2>Informasi Rekrutmen</h2>
-                        <p>Lengkapi data diri untuk bergabung sebagai editor atau reviewer pada jurnal ini.</p>
+                <div class="recruitment-journal-summary">
+                    <div class="recruitment-journal-cover">
+                        <?php if ($journalLogoUrl !== ''): ?>
+                            <img src="<?= esc($journalLogoUrl, 'attr') ?>" alt="Cover <?= esc((string) ($journal['name'] ?? 'jurnal'), 'attr') ?>">
+                        <?php else: ?>
+                            <span>Jurnal</span>
+                            <strong><?= esc(strtoupper(substr((string) ($journal['name'] ?? 'J'), 0, 1))) ?></strong>
+                        <?php endif; ?>
+                    </div>
+                    <div class="recruitment-journal-meta">
+                        <small>Jurnal tujuan</small>
+                        <h2><?= esc((string) ($journal['name'] ?? 'Jurnal')) ?></h2>
+                        <?php if ($journalIssn !== []): ?>
+                            <div class="recruitment-journal-issn">
+                                <?php foreach ($journalIssn as $issn): ?>
+                                    <span><?= esc($issn) ?></span>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php else: ?>
+                            <p>ISSN belum tersedia.</p>
+                        <?php endif; ?>
                     </div>
                 </div>
 
@@ -37,6 +61,14 @@ $intro = trim((string) ($journal['recruitment_intro'] ?? ''));
                     <?php else: ?>
                         <p>Form ini ditujukan untuk dosen, peneliti, dan praktisi yang berminat bergabung sebagai Editor atau Reviewer. Data yang dikirim akan digunakan oleh pengelola jurnal untuk meninjau kesesuaian bidang keahlian dan rekam jejak publikasi.</p>
                     <?php endif; ?>
+                </div>
+
+                <div class="loa-form-heading recruitment-form-heading">
+                    <span>01</span>
+                    <div>
+                        <h2>Informasi Rekrutmen</h2>
+                        <p>Lengkapi data diri untuk bergabung sebagai editor atau reviewer pada jurnal ini.</p>
+                    </div>
                 </div>
 
                 <div class="loa-form-grid">

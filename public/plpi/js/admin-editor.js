@@ -74,10 +74,8 @@ document.addEventListener('DOMContentLoaded', function () {
         media_live_embeds: true,
         entity_encoding: 'raw',
         content_style: [
-            'html,body{font-family:Arial,Helvetica,sans-serif!important;font-size:14px;font-weight:400!important;line-height:1.65;color:#233348;padding:12px;}',
-            'body.mce-content-body,body.mce-content-body *{font-family:Arial,Helvetica,sans-serif!important;font-weight:400!important;}',
-            'p{margin:0 0 10px;font-weight:400!important;}',
-            'p,div,span,li,td,th,b,strong{font-weight:400!important;}',
+            'html,body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.65;color:#233348;padding:12px;}',
+            'p{margin:0 0 10px;}',
             'blockquote{margin:16px 0;padding:16px 18px;border-left:5px solid #0f766e;border-radius:0 14px 14px 0;background:#ecfdf5;color:#0b2b4c;font-size:16px;line-height:1.7;}',
             'blockquote p{margin:0 0 8px;}',
             'blockquote p:last-child{margin-bottom:0;}',
@@ -92,27 +90,6 @@ document.addEventListener('DOMContentLoaded', function () {
             editor.on('init', function () {
                 const body = editor.getBody();
                 if (!body) return;
-
-                let content = editor.getContent();
-                content = content
-                    .replace(/<\/?(strong|b)\b[^>]*>/gi, '')
-                    .replace(/font-weight\s*:\s*(bold|bolder|[5-9]00)\s*;?/gi, '');
-                editor.setContent(content);
-                body.style.fontWeight = '400';
-                body.style.fontFamily = 'Arial, Helvetica, sans-serif';
-
-                body.querySelectorAll('b,strong').forEach(function (node) {
-                    const span = editor.getDoc().createElement('span');
-                    span.innerHTML = node.innerHTML;
-                    node.parentNode.replaceChild(span, node);
-                });
-                body.querySelectorAll('[style]').forEach(function (node) {
-                    node.style.fontFamily = '';
-                    node.style.fontWeight = '';
-                    if (!node.getAttribute('style')) {
-                        node.removeAttribute('style');
-                    }
-                });
                 editor.save();
             });
             editor.on('change keyup undo redo', function () {

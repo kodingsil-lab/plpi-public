@@ -919,7 +919,25 @@ class PublicPage extends BaseController
 
     private function sanitizeRichHtml(string $html): string
     {
-        return $this->cleanArticleHtml($html);
+        if (trim($html) === '') {
+            return '';
+        }
+
+        $formattedTags = ['p', 'div', 'span', 'strong', 'b', 'em', 'i', 'u', 'ul', 'ol', 'li', 'h2', 'h3', 'h4', 'blockquote', 'table', 'thead', 'tbody', 'tr', 'td', 'th'];
+        $allowedAttrs = array_fill_keys($formattedTags, ['style']);
+        $allowedAttrs['a'] = ['href', 'title', 'target', 'rel', 'style'];
+
+        $previous = libxml_use_internal_errors(true);
+        $dom = new DOMDocument('1.0', 'UTF-8');
+        $dom->loadHTML('<?xml encoding="utf-8" ?><div>' . $html . '</div>', LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        $this->sanitizeDomNode($dom, $allowedAttrs);
+        $clean = $dom->saveHTML() ?: '';
+        libxml_clear_errors();
+        libxml_use_internal_errors($previous);
+
+        $clean = preg_replace('#^<div>|</div>$#', '', $clean) ?: $clean;
+
+        return trim($clean);
     }
 
     private function sanitizeDomNode(DOMNode $node, array $allowedAttrs): void
@@ -928,7 +946,7 @@ class PublicPage extends BaseController
             return;
         }
 
-        $allowedTags = ['p', 'br', 'strong', 'b', 'em', 'i', 'u', 'ul', 'ol', 'li', 'h2', 'h3', 'h4', 'blockquote', 'a', 'table', 'thead', 'tbody', 'tr', 'td', 'th', 'div', 'iframe'];
+        $allowedTags = ['p', 'br', 'strong', 'b', 'em', 'i', 'u', 'ul', 'ol', 'li', 'h2', 'h3', 'h4', 'blockquote', 'a', 'table', 'thead', 'tbody', 'tr', 'td', 'th', 'div', 'span', 'iframe'];
 
         for ($i = $node->childNodes->length - 1; $i >= 0; $i--) {
             $child = $node->childNodes->item($i);
@@ -962,6 +980,15 @@ class PublicPage extends BaseController
                                 $child->setAttribute('href', '#');
                             }
                         }
+
+                        if ($attrName === 'style') {
+                            $style = $this->sanitizeInlineStyle((string) $child->attributes->getNamedItem('style')?->nodeValue);
+                            if ($style === '') {
+                                $child->removeAttribute('style');
+                            } else {
+                                $child->setAttribute('style', $style);
+                            }
+                        }
                     }
                 }
 
@@ -975,6 +1002,36 @@ class PublicPage extends BaseController
 
             $this->sanitizeDomNode($child, $allowedAttrs);
         }
+    }
+
+    private function sanitizeInlineStyle(string $style): string
+    {
+        $allowedProperties = [
+            'text-align', 'font-size', 'font-family', 'font-weight', 'font-style',
+            'text-decoration', 'color', 'background-color', 'line-height',
+            'margin-left', 'margin-right', 'padding-left',
+        ];
+        $clean = [];
+
+        foreach (explode(';', $style) as $declaration) {
+            if (! str_contains($declaration, ':')) {
+                continue;
+            }
+
+            [$property, $value] = array_map('trim', explode(':', $declaration, 2));
+            $property = strtolower($property);
+            if (! in_array($property, $allowedProperties, true) || $value === '') {
+                continue;
+            }
+
+            if (preg_match('/(?:url\s*\(|expression\s*\(|javascript:|data:|@import|[<>])/i', $value) === 1) {
+                continue;
+            }
+
+            $clean[] = $property . ': ' . $value;
+        }
+
+        return implode('; ', $clean);
     }
 
     private function sanitizeYoutubeIframe(DOMElement $iframe): bool

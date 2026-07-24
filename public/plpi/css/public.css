@@ -2600,6 +2600,90 @@ a {
     line-height: 1.55;
 }
 
+.recruitment-journal-summary {
+    display: grid;
+    grid-template-columns: 128px minmax(0, 1fr);
+    gap: 18px;
+    align-items: center;
+    margin: 18px 18px 0;
+    padding: 16px;
+    border: 1px solid #dbe5ef;
+    border-radius: 14px;
+    background: #ffffff;
+}
+
+.recruitment-journal-cover {
+    display: flex;
+    width: 128px;
+    height: 156px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 10px;
+    background: linear-gradient(145deg, #123a51, #0f766e);
+    color: #ffffff;
+    box-shadow: 0 12px 24px rgba(15, 55, 102, 0.16);
+}
+
+.recruitment-journal-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #ffffff;
+}
+
+.recruitment-journal-cover span {
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.recruitment-journal-cover strong {
+    font-size: 58px;
+    line-height: 1;
+}
+
+.recruitment-journal-meta small {
+    color: var(--blue);
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.recruitment-journal-meta h2 {
+    margin: 5px 0 12px;
+    color: var(--navy);
+    font-size: clamp(20px, 2.4vw, 28px);
+    line-height: 1.25;
+}
+
+.recruitment-journal-meta p {
+    margin: 0;
+    color: #64748b;
+}
+
+.recruitment-journal-issn {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.recruitment-journal-issn span {
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: #ecfdf5;
+    color: #0f5f59;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.recruitment-form-heading {
+    margin-top: 18px;
+    border-top: 1px solid #e4edf5;
+}
+
 .recruitment-intro-box h3 {
     margin: 0 0 8px;
     color: var(--navy);
@@ -2607,7 +2691,11 @@ a {
 }
 
 .recruitment-intro-box p {
-    margin: 0;
+    margin: 0 0 10px;
+}
+
+.recruitment-intro-box p:last-child {
+    margin-bottom: 0;
 }
 
 .public-alert {
@@ -3127,6 +3215,22 @@ a {
 }
 
 @media (max-width: 640px) {
+    .recruitment-journal-summary {
+        grid-template-columns: 88px minmax(0, 1fr);
+        gap: 12px;
+        margin: 14px 14px 0;
+        padding: 12px;
+    }
+
+    .recruitment-journal-cover {
+        width: 88px;
+        height: 112px;
+    }
+
+    .recruitment-journal-cover strong {
+        font-size: 42px;
+    }
+
     .home-hero {
         padding: 42px 0 54px;
     }
