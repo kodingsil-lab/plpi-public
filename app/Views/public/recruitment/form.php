@@ -47,7 +47,6 @@ $journalIssn = array_values(array_filter([
                         <?php endif; ?>
                     </div>
                     <div class="recruitment-journal-meta">
-                        <small>Jurnal tujuan</small>
                         <h2><?= esc((string) ($journal['name'] ?? 'Jurnal')) ?></h2>
                         <?php if ($journalIssn !== []): ?>
                             <div class="recruitment-journal-issn">
@@ -81,22 +80,24 @@ $journalIssn = array_values(array_filter([
                 </div>
 
                 <div class="loa-form-grid">
+                    <p class="form-required-note span-2"><span>*</span> Wajib diisi</p>
+
                     <label class="span-2">
                         <span>Jurnal</span>
                         <input value="<?= esc((string) ($journal['name'] ?? '-'), 'attr') ?>" readonly>
                     </label>
 
-                    <label>
+                    <label class="is-required">
                         <span>Nama Lengkap dan Gelar</span>
                         <input name="full_name" value="<?= esc((string) old('full_name'), 'attr') ?>" required placeholder="Contoh: Dr. Nama Lengkap, M.Pd.">
                     </label>
 
-                    <label>
+                    <label class="is-required">
                         <span>Asal Institusi</span>
                         <input name="institution" value="<?= esc((string) old('institution'), 'attr') ?>" required placeholder="Nama institusi/perguruan tinggi">
                     </label>
 
-                    <label>
+                    <label class="is-required">
                         <span class="field-label">
                             Bergabung Sebagai
                             <span class="field-tooltip" tabindex="0" aria-label="Pilih Editor jika ingin membantu pengelolaan naskah, atau Reviewer jika ingin menelaah artikel sesuai bidang keahlian.">?</span>
@@ -108,16 +109,15 @@ $journalIssn = array_values(array_filter([
                         </select>
                     </label>
 
-                    <label>
+                    <label class="is-required">
                         <span class="field-label">
                             Alamat Email
                             <span class="field-tooltip" tabindex="0" aria-label="Gunakan email aktif karena informasi seleksi, SK, dan sertifikat akan dikirim melalui email ini.">?</span>
                         </span>
                         <input type="email" name="email" value="<?= esc((string) old('email'), 'attr') ?>" required placeholder="contoh@email.com">
-                        <small>Digunakan untuk pengiriman SK dan sertifikat.</small>
                     </label>
 
-                    <label>
+                    <label class="is-required">
                         <span class="field-label">
                             Nomor Handphone/WA
                             <span class="field-tooltip" tabindex="0" aria-label="Masukkan nomor WhatsApp aktif, boleh diawali 08 atau kode negara +62.">?</span>
@@ -125,7 +125,7 @@ $journalIssn = array_values(array_filter([
                         <input name="phone" value="<?= esc((string) old('phone'), 'attr') ?>" required placeholder="0812xxxxxx / +62812xxxxxx">
                     </label>
 
-                    <label>
+                    <label class="is-required">
                         <span class="field-label">
                             Google Scholar ID
                             <span class="field-tooltip" tabindex="0" aria-label="Tempel tautan profil Google Scholar, biasanya berisi scholar.google.com/citations?user=kodeprofil.">?</span>
@@ -133,7 +133,7 @@ $journalIssn = array_values(array_filter([
                         <input name="google_scholar_id" value="<?= esc((string) old('google_scholar_id'), 'attr') ?>" required placeholder="https://scholar.google.com/citations?user=...">
                     </label>
 
-                    <label>
+                    <label class="is-required">
                         <span class="field-label">
                             SINTA ID
                             <span class="field-tooltip" tabindex="0" aria-label="Tempel tautan profil SINTA, contohnya sinta.kemdikbud.go.id/authors/profile/nomorid.">?</span>
@@ -141,7 +141,7 @@ $journalIssn = array_values(array_filter([
                         <input name="sinta_id" value="<?= esc((string) old('sinta_id'), 'attr') ?>" required placeholder="https://sinta.kemdikbud.go.id/authors/profile/...">
                     </label>
 
-                    <label>
+                    <label class="is-optional">
                         <span class="field-label">
                             Scopus ID
                             <span class="field-tooltip" tabindex="0" aria-label="Opsional. Isi tautan profil Scopus atau Author ID jika tersedia.">?</span>
@@ -149,7 +149,7 @@ $journalIssn = array_values(array_filter([
                         <input name="scopus_id" value="<?= esc((string) old('scopus_id'), 'attr') ?>" placeholder="https://www.scopus.com/authid/detail.uri?authorId=...">
                     </label>
 
-                    <label>
+                    <label class="is-optional">
                         <span class="field-label">
                             ORCID ID
                             <span class="field-tooltip" tabindex="0" aria-label="Opsional. Isi tautan ORCID dengan format orcid.org/0000-0000-0000-0000 jika sudah punya.">?</span>
@@ -157,7 +157,7 @@ $journalIssn = array_values(array_filter([
                         <input name="orcid_id" value="<?= esc((string) old('orcid_id'), 'attr') ?>" placeholder="https://orcid.org/0000-0000-0000-0000">
                     </label>
 
-                    <label class="span-2">
+                    <label class="span-2 is-required">
                         <span class="field-label">
                             Bidang Keahlian
                             <span class="field-tooltip" tabindex="0" aria-label="Tulis beberapa bidang yang paling sesuai dengan kompetensi atau publikasi Anda, pisahkan dengan koma.">?</span>
