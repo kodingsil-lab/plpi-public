@@ -29,6 +29,14 @@ $journalIssn = array_values(array_filter([
 
         <form class="loa-public-form" method="post" action="<?= site_url('rekrutmen-editor-reviewer/jurnal/' . (string) ($journal['slug'] ?? '')) ?>">
             <div class="loa-form-panel">
+                <div class="loa-form-heading">
+                    <span>01</span>
+                    <div>
+                        <h2>Pengantar</h2>
+                        <p>Informasi jurnal dan rekrutmen editor atau reviewer.</p>
+                    </div>
+                </div>
+
                 <div class="recruitment-journal-summary">
                     <div class="recruitment-journal-cover">
                         <?php if ($journalLogoUrl !== ''): ?>
@@ -54,7 +62,6 @@ $journalIssn = array_values(array_filter([
                 </div>
 
                 <div class="recruitment-intro-box">
-                    <h3>Pengantar</h3>
                     <?php $introHtml = trim((string) ($journal['recruitment_intro_html'] ?? $intro)); ?>
                     <?php if ($introHtml !== ''): ?>
                         <?= $introHtml ?>
@@ -62,11 +69,13 @@ $journalIssn = array_values(array_filter([
                         <p>Form ini ditujukan untuk dosen, peneliti, dan praktisi yang berminat bergabung sebagai Editor atau Reviewer. Data yang dikirim akan digunakan oleh pengelola jurnal untuk meninjau kesesuaian bidang keahlian dan rekam jejak publikasi.</p>
                     <?php endif; ?>
                 </div>
+            </div>
 
-                <div class="loa-form-heading recruitment-form-heading">
-                    <span>01</span>
+            <div class="loa-form-panel">
+                <div class="loa-form-heading">
+                    <span>02</span>
                     <div>
-                        <h2>Informasi Rekrutmen</h2>
+                        <h2>Form Pendaftaran</h2>
                         <p>Lengkapi data diri untuk bergabung sebagai editor atau reviewer pada jurnal ini.</p>
                     </div>
                 </div>
